@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="Generator" content="EditPlus®">
+    <meta name="Author" content="">
+    <meta name="Keywords" content="">
+    <meta name="Description" content="">
+    <title>家校易登录</title>
+</head>
+<link rel="stylesheet" href="../bowerlib/bootstrap/dist/css/bootstrap.css">
+<body>
+<div class="box">
+    <div class="word">家校易</div>
+    <div class="login-box">
+        <div class="login-content ">
+            <div class="form">
+                <div class="form-group" style="margin-top: 20px;">
+                    <div class="col-xs-12  ">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input type="text" id="user" name="user" class="form-control user" placeholder="用户名">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+                            <input type="password" id="pwd" name="password" class="form-control pwd" placeholder="密码">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-12 text-center">
+                        <input type="button" name="btn" class="login" id="login" value="登录">
+                    </div>
+                   <!-- <div class="col-xs-12 text-center">
+                        <input type="button" name="btn" class="login" id="getSession" value="getSession">
+                    </div>-->
+                    <div class="col-xs-12 link">
+                        <p class="text-center">忘记密码？<a href="update_pwd.jsp">找回</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../bowerlib/jquery/dist/jquery.js"></script>
+<script type="text/javascript" src="../bowerlib/bootstrap/dist/js/bootstrap.js"></script>
+<script type="text/javascript" src="js/public_static.js"></script>
+<script type="text/javascript">
+    /*判断*/
+    var username = document.getElementById('user');
+    var password = document.getElementById('pwd');
+
+    $('#login').on('click', function () {
+        if (username.value == "" || password.value == "") {
+            alert("用户名或密码不能为空");
+        } else {
+            $.ajax({
+                type: 'post',
+                url: window.iandtop.public.static.contextPath + '/api/login/signin',
+                contentType: "application/json;charset=UTF-8",
+//                xhrFields: {
+//                    withCredentials: true//使用withCredentials的方式解决跨域,ie10以上支持
+//                },
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("x-auth-token",  window.iandtop.public.static.getSessionID()); //使用spring session的token方式
+                },
+                dataType: "json",
+                data: JSON.stringify({
+                    user_code: username.value,
+                    user_password: password.value
+                }),
+                success: function (data, status, xhr) {
+                    if (data.success) {
+                        //存储当前的token
+                        window.iandtop.public.static.setSessionID(xhr.getResponseHeader("x-auth-token"));
+                        location.href = "index.html";
+                    } else {
+                        alert(data.msg);
+                    }
+                },
+                error: function (data) {
+                    alert("保存失败！" + data);
+                }
+            });
+        }
+    });
+
+    $('#getSession').on('click', function () {
+        $.ajax({
+            type: 'post',
+            url: window.iandtop.public.static.contextPath + '/api/login/getSession',
+            contentType: "application/json;charset=UTF-8",
+//            xhrFields: {
+//                withCredentials: true//使用withCredentials的方式解决跨域,ie10以上支持
+//            },
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("x-auth-token", window.iandtop.public.static.getSessionID());  //使用spring session的token方式
+            },
+            dataType: "json",
+            data: "sfsd",
+            success: function (data) {
+                alert("session" + data);
+            },
+            error: function (data) {
+                alert("保存失败！");
+            }
+        });
+    });
+
+    $('#reset').on('click', function () {
+        location.href = "update_pwd";
+    });
+</script>
+</html>
+

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <title>家校易</title>
+    <link rel="stylesheet" href="../bowerlib/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../bowerlib/datatables.net-dt/css/jquery.dataTables.css">
+    <link rel="stylesheet" href="../bowerlib/jstree/dist/themes/default/style.css">
+    <link rel="stylesheet" href="../bowerlib/bootstrap-treeview/public/css/bootstrap-treeview.css">
+</head>
+<body>
+<nav class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#navbar-collapse">
+                <span class="sr-only">切换导航</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">家校易</a>
+        </div>
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">iOS</a></li>
+                <li><a href="#">SVN</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Java <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">jmeter</a></li>
+                        <li><a href="#">EJB</a></li>
+                        <li><a href="#">Jasper Report</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">分离的链接</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">另一个分离的链接</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <form class="navbar-form navbar-right" role="search">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search">
+                </div>
+                <button type="submit" class="btn btn-default">提交</button>
+            </form>
+            <!--向右对齐-->
+            <ul class="nav navbar-nav navbar-right">
+
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid">
+    <ul class="nav nav-pills nav-stacked col-md-2 col-lg-2 col-sm-3">
+        <li>
+            <a href="#" class="nav-header collapsed" data-toggle="collapse">
+                <i class="glyphicon glyphicon-cog"></i>
+                系统管理
+                <span class="pull-right glyphicon glyphicon-chevron-down"></span>
+            </a>
+        </li>
+        <li>
+            <a href="#basse" class="nav-header collapsed" data-toggle="collapse">
+                <i class="glyphicon glyphicon-cog"></i>
+                基础资料
+                <span class="pull-right glyphicon glyphicon-chevron-down"></span>
+            </a>
+            <ul id="basse" class="nav nav-list collapse">
+                <li><a href="javascript:indexNavigate('jxy/user.html')"><i
+                        class="glyphicon glyphicon-user"></i>用户管理</a></li>
+                <li><a href="javascript:indexNavigate('jxy/role.html')"><i
+                        class="glyphicon glyphicon-asterisk"></i>角色管理</a></li>
+                <li><a href="javascript:indexNavigate('jxy/school.html')"><i
+                        class="glyphicon glyphicon-edit"></i>学校管理</a></li>
+                <li><a href="javascript:indexNavigate('jxy/department.html')"><i
+                        class="glyphicon glyphicon-edit"></i>部门管理</a></li>
+                <li><a href="#"><i class="glyphicon glyphicon-edit"></i>班级管理</a></li>
+                <li><a href="javascript:indexNavigate('jxy/staff.html')"><i
+                        class="glyphicon glyphicon-edit"></i>教职档案</a></li>
+                <li><a href="#"><i class="glyphicon glyphicon-edit"></i>学生档案</a></li>
+                <li><a href="#"><i class="glyphicon glyphicon-edit"></i>其它</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#cms" class="nav-header collapsed" data-toggle="collapse">
+                <i class="glyphicon glyphicon-credit-card"></i>
+                文章内容管理
+                <span class="pull-right glyphicon glyphicon-chevron-down"></span>
+            </a>
+            <ul id="cms" class="nav nav-list collapse">
+                <li><a href="javascript:indexNavigate('jxycms/cms.html')">
+                    <i class="glyphicon glyphicon-user"></i>编辑发布</a>
+                </li>
+                <li><a href="javascript:indexNavigate('jxycms/cmslist.html')">
+                    <i class="glyphicon glyphicon-asterisk"></i>发布列表</a>
+                </li>
+                <li><a href="javascript:indexNavigate('jxycms/cmspro.html')">
+                    <i class="glyphicon glyphicon-asterisk"></i>草稿箱</a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="#im" class="nav-header collapsed" data-toggle="collapse">
+                <i class="glyphicon glyphicon-credit-card"></i>
+                IM管理
+                <span class="pull-right glyphicon glyphicon-chevron-down"></span>
+            </a>
+            <ul id="im" class="nav nav-list collapse">
+                <li><a href="javascript:indexNavigate('../im/im.html')">
+                    <i class="glyphicon glyphicon-user"></i>在线交流</a>
+                </li>
+                <li><a href="javascript:indexNavigate('../im/imManage.html')">
+                    <i class="glyphicon glyphicon-asterisk"></i>社交管理</a>
+                </li>
+            </ul>
+        </li>
+        <li><a href="#">其他</a></li>
+    </ul>
+    <div id="content" class="container col-md-10 col-lg-10 col-sm-9">
+
+    </div>
+</div>
+<script type="text/javascript" src="../bowerlib/jquery/dist/jquery.js"></script>
+<script type="text/javascript" src="../bowerlib/bootstrap/dist/js/bootstrap.js"></script>
+<script type="text/javascript" src="../bowerlib/datatables.net/js/jquery.dataTables.js"></script>
+<script type="text/javascript" src="../bowerlib/jstree/dist/jstree.js"></script>
+<script type="text/javascript" src="../bowerlib/bootstrap-treeview/public/js/bootstrap-treeview.js"></script>
+<script type="text/javascript" src="js/public.js"></script>
+<script type="text/javascript" src="js/public_static.js"></script>
+<script type="text/javascript">
+    if(!window.iandtop.public.static.getSessionID()){
+        location.href = "login.html" ;
+    }
+    function indexNavigate(url) {
+        $("#content").load(url);
+    }
+</script>
+
+</body>
+</html>
