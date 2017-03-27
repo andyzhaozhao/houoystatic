@@ -28,6 +28,7 @@
     "socket.io": "^1.7.3",
     "stomp-websocket": "^2.3.4",
     "sockjs": "^0.3.4",
-    "bootstrap-treeview": "^1.2.0"
+    "bootstrap-treeview": "^1.2.0",
+    "vue": "^2.2.5"
   }
 }
