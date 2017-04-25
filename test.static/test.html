@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="http://libs.baidu.com/jquery/2.1.1/jquery.min.js"></script>
+
+    <script>
+        $(function(){
+    		getValue('account');
+        });
+
+        function testJsonp() { 
+        	var param = {};
+        	param.account = getValue('account');
+        	param.name = getValue('name');
+        	param.roleid = getValue('roleid');
+        	param.deptid = getValue('deptid');
+	       /* $.ajax({
+	            type:'get',  
+	            url:'http://192.168.199.213:9090/iot/user/save',  
+	            data:param,
+	            // contentType: "application/json;charset=UTF-8",
+	            // dataType:'jsonp',  
+	            // jsonp:"callback",
+	            // data: JSON.stringify({
+             //        account: getValue('account'),
+             //        deptid: getValue('deptid'),
+             //        name: getValue('name'),
+             //        roleid: getValue('roleid')
+             //    }),
+	            success:function (data) {  
+	                alert(data);  
+	            },  
+	            error:function (err,a) {
+	                alert('出现错误了!!!');  
+	            }  
+	        });*/
+
+			/*$.ajax({
+				type: 'post',
+				url: "http://192.168.199.213:9090/iot/user/save",
+				contentType: "application/json;charset=UTF-8",
+//				beforeSend: function (xhr) {
+//					xhr.setRequestHeader("x-auth-token", window.iandtop.public.static.getSessionID());  //使用spring session的token方式
+//				},
+				dataType: "json",
+				data: JSON.stringify(param),
+				success: function (data,e,e,e) {
+                    alert("保存成功"+data);
+				},
+				error: function (data,e,e,e) {
+					alert("保存失败！");
+				}
+			});*/
+
+            $.ajax({
+                type: 'post',
+                url: "http://192.168.199.213:9090/iot/user/save",
+                //contentType: "application/json;charset=UTF-8",
+                //dataType: "json",
+                data: param,
+                success: function (data,e,e,e) {
+                    alert("保存成功"+data);
+                },
+                error: function (data,e,e,e) {
+                    alert("保存失败！");
+                }
+            });
+	    }  
+
+        function getValue(id){
+        	var temValue = $('#'+id).val();
+        	console.log(temValue)
+        	return temValue;
+        }
+    </script>
+</head>
+<body>
+	<div>
+		<input type="text" id="account" name="account" value="table" />
+		<input type="text" id="deptid" name="deptid" value="1" />
+		<input type="text" id="name" name="name" value="xiaoming" />
+		<input type="text" id="roleid" name="roleid" value="1" />
+		<input type="button" name="" id="btn" onclick="testJsonp()" value="tijiao" />
+	</div>
+</body>
+</html>

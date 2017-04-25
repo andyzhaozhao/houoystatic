@@ -8,7 +8,6 @@
     }
 })(window.iandtop || {});
 
-//页面模型
 (function pub(s) {
     if (!window.iandtop.public) {
         window.iandtop.public = s;
