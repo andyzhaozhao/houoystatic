@@ -1,6 +1,6 @@
 /**
  * 用户管理
- * @author 吕召
+ * @author andyzhao
  */
 (function (user) {
     //定义页面数据模型
@@ -114,7 +114,7 @@
 
             $.ajax({
                 type: 'post',
-                url: contextPath + "/api/role/retrieve",
+                url:  window.iandtop.public.static.contextPath  + "/api/role/retrieve",
                 contentType: "application/json;charset=UTF-8",
                 dataType: "json",
                 async:false,
@@ -258,7 +258,7 @@
         }
 
         function convertItem(o) {
-            var iconPath = staticResourceContextPath+"/base/img/role.png";
+            var iconPath = "imgs/jxy/role.png";
             o.id = o.pk_role;
             o.text = o.role_name;
             o.icon = iconPath;
@@ -272,7 +272,7 @@
 
         user.dataTable = window.iandtop.public.createDataTable({
             dataTableID: "table",
-            url: contextPath + "/root/base/user/retrieve",
+            url:  window.iandtop.public.static.contextPath  + "/root/base/user/retrieve",
             param: {//查询参数
                 user_code: function(){return $("input[name='user_code']").val()},
                 user_name: function(){return $("input[name='user_name']").val()},
@@ -309,7 +309,7 @@
 
             $.ajax({
                 type: 'post',
-                url: contextPath + '/root/base/user/save',
+                url:  window.iandtop.public.static.contextPath  + '/root/base/user/save',
                 contentType: "application/json;charset=UTF-8",
                 dataType: "json",
                 data: JSON.stringify(user.userModel.getCurrentData()),
@@ -346,7 +346,7 @@
 
         $.ajax({
             type: 'post',
-            url: contextPath + '/root/base/user/delete',
+            url:  window.iandtop.public.static.contextPath  + '/root/base/user/delete',
             contentType: "application/json;charset=UTF-8",
             dataType: "json",
             data: JSON.stringify(pk_users),

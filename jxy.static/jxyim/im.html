@@ -16,7 +16,7 @@ Welcome<br/>
 <script type="text/javascript">
     var websocket = null;
 
-    var url = "192.168.0.3:8899";
+    var url = "localhost:8899";
     //判断当前浏览器是否支持WebSocket
     if ('WebSocket' in window) {
         websocket = new WebSocket("ws:/"+url+"/websocket");
