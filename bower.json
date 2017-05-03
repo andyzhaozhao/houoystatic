@@ -30,6 +30,7 @@
     "sockjs": "^0.3.4",
     "bootstrap-treeview": "^1.2.0",
     "vue": "^2.2.5",
-    "bootstrap-table": "^1.11.1"
+    "bootstrap-table": "^1.11.1",
+    "bootstrap-fileinput": "^4.3.9"
   }
 }
