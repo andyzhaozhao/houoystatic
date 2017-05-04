@@ -13,6 +13,9 @@
     <link rel="stylesheet" href="../bowerlib/datatables.net-dt/css/jquery.dataTables.css">
     <link rel="stylesheet" href="../bowerlib/jstree/dist/themes/default/style.css">
     <link rel="stylesheet" href="../bowerlib/bootstrap-treeview/public/css/bootstrap-treeview.css">
+
+    <!--引入wangEditor.css-->
+    <link rel="stylesheet" type="text/css" href="../bowerlib/wangEditor/dist/css/wangEditor.min.css">
 </head>
 <body>
 <nav class="navbar navbar-default navbar-static-top" role="navigation">
@@ -136,14 +139,26 @@
 <script type="text/javascript" src="../bowerlib/datatables.net/js/jquery.dataTables.js"></script>
 <script type="text/javascript" src="../bowerlib/jstree/dist/jstree.js"></script>
 <script type="text/javascript" src="../bowerlib/bootstrap-treeview/public/js/bootstrap-treeview.js"></script>
+
+<script type="text/javascript" src="../bowerlib/wangEditor/dist/js/wangEditor.min.js"></script>
+
 <script type="text/javascript" src="js/public.js"></script>
 <script type="text/javascript" src="js/public_static.js"></script>
 <script type="text/javascript">
     if(!window.iandtop.public.static.getSessionID()){
         location.href = "login.html" ;
     }
+
     function indexNavigate(url) {
-        $("#content").load(url);
+        $("#content").empty();
+        $("#content").html("");
+        $.ajaxSetup ({
+            cache: false //关闭AJAX相应的缓存
+        });
+         $("#content").load(url,null,function(a,b,c){
+
+         });
+
     }
 </script>
 

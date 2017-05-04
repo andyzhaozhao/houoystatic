@@ -4,7 +4,7 @@
  */
 (function (cms) {
     //定义页面数据模型
-    var url = "http://192.168.0.3:8889";
+    var url = "http://localhost:8888";
     cms.userModel = window.iandtop.public.createPageModel();
     cms.userModel.setCurrentData({
         id: null,
@@ -26,10 +26,11 @@
     //定义页面成员方法
     cms.init = function () {
         //加载编辑器的容器
-        cms.um = UM.getEditor('container', {
-            /* 传入配置参数,可配参数列表看umeditor.config.js */
-            // toolbar: ['undo redo | bold italic underline']
-        });
+        if(!cms.um){
+            debugger;
+            cms.um = new wangEditor('container');
+            cms.um.create();
+        }
 
         //注册事件监听
         $("#addBtn").click(function () {
