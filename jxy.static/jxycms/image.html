@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>images</title>
+</head>
+<body>
+<table class="table ">
+    <tr>
+        <td class="modalList">
+            <div id="tree">
+
+            </div>
+        </td>
+        <td></td>
+        <td>
+            <div class="row well well-sm">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default pageStateSearch" id="addBtn">增加</button>
+                    <button type="button" class="btn btn-default pageStateSearch pageStateOneSelected" id="editBtn">修改
+                    </button>
+                    <button type="button" class="btn btn-default pageStateSearch pageStateMulSelected" id="deleteBtn">
+                        删除
+                    </button>
+                    <button type="button" class="btn btn-default pageStateCreate pageStateUpdate" id="saveBtn">保存
+                    </button>
+                    <button type="button" class="btn btn-default pageStateCreate pageStateUpdate" id="cancelBtn">取消
+                    </button>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default modalCard pageStateSearch" id="toListBtn">列表视图</button>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default modalList pageStateOneSelected" id="toCardBtn">卡片视图
+                    </button>
+                </div>
+            </div>
+            <div class="row well well-sm modalList">
+                <div class="form-inline">
+                    <div class="form-group">
+                        <label>文章标题</label>
+                        <input type="number" class="form-control" name="title">
+                    </div>
+                    <div class="form-group">
+                        <label>文章内容</label>
+                        <input type="text" class="form-control" name="content">
+                    </div>
+                    <button class="btn btn-default" id="searchBtn">查询</button>
+                    <button class="btn btn-default" id="searchResetBtn">重置</button>
+                </div>
+            </div>
+            <!--列表视图-->
+            <div class="row panel panel-default modalList">
+                <div class="panel-body">
+                    <table id="table">
+                    </table>
+                </div>
+            </div>
+            <!--卡片视图-->
+            <div class="row panel panel-default modalCard">
+                <div class="panel-body">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label for="title" class="col-sm-2 col- control-label">标题</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control pageStateCreate pageStateUpdate" id="title"
+                                       placeholder="标题">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="subTitle" class="col-sm-2 control-label">副标题</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control pageStateCreate pageStateUpdate" id="subTitle"
+                                       placeholder="副标题">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="container" class="col-sm-2 control-label">内容</label>
+                            <div class="col-sm-10">
+                                <!-- 加载编辑器的容器 -->
+                                <div id="container">
+                                    文章内容
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<script type="text/javascript" src="jxycms/js/cms.js"></script>
+<script>
+    function getTree(){
+        var tree = [
+            {
+                text: "Parent 1",
+                nodes: [
+                    {
+                        text: "Child 1",
+                        nodes: [
+                            {
+                                text: "Grandchild 1",
+                                nodes: [
+                                    {
+                                        text: "Child 1",
+                                        nodes: [
+                                            {
+                                                text: "Grandchild 1"
+                                            },
+                                            {
+                                                text: "Grandchild 2"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        text: "Child 2"
+                                    }
+                                ]
+                            },
+                            {
+                                text: "Grandchild 2"
+                            }
+                        ]
+                    },
+                    {
+                        text: "Child 2"
+                    }
+                ]
+            },
+            {
+                text: "Parent 2"
+            },
+            {
+                text: "Parent 3"
+            },
+            {
+                text: "Parent 4"
+            }, {
+                text: "Parent 4"
+            }, {
+                text: "Parent 4"
+            }, {
+                text: "Parent 4"
+            }, {
+                text: "Parent 4"
+            }, {
+                text: "Parent 4"
+            }, {
+                text: "Parent 4"
+            }, {
+                text: "Parent 4"
+            }, {
+                text: "Parent 4"
+            }, {
+                text: "Parent 4"
+            }, {
+                text: "Parent 4"
+            }, {
+                text: "Parent 4"
+            }, {
+                text: "Parent 4"
+            }, {
+                text: "Parent 4"
+            }, {
+                text: "Parent 4"
+            }, {
+                text: "Parent 4"
+            }, {
+                text: "Parent 4"
+            }, {
+                text: "Parent 4"
+            }, {
+                text: "Parent 4"
+            }, {
+                text: "Parent 4"
+            }, {
+                text: "Parent 4"
+            }, {
+                text: "Parent 4"
+            }, {
+                text: "Parent 4"
+            }, {
+                text: "Parent 4"
+            }, {
+                text: "Parent 4"
+            },
+            {
+                text: "Parent 5"
+            }
+        ];
+        return tree;
+    }
+    $('#tree').treeview({data: getTree()});
+</script>
+</body>
+</html>
+
+
+
+
+
