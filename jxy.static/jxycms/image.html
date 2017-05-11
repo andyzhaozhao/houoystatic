@@ -27,6 +27,9 @@
                     <input type="text" class="form-control" placeholder="Search" id="treeSearchInt">
                 </div>
             </div>
+            <div class="row" id="treeAlertArea">
+
+            </div>
             <div class="row">
                 <div id="tree">
 
@@ -123,7 +126,8 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">上级目录</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control pageStateCreate pageStateUpdate" id="pkParentInt"
+                                <input type="text" class="form-control pageStateCreate pageStateUpdate"
+                                       id="pkParentInt"
                                        placeholder="上级目录pk" disabled>
                                 <input type="text" class="form-control pageStateCreate pageStateUpdate"
                                        id="nameParentInt"
@@ -178,11 +182,18 @@
         folderTree = $('#tree').treeview({data:treeData});
     }
 
+    //增加相邻节点
     $("#treeAddNextBtn").click(function () {
        var so = folderTree.treeview('getSelected');
-        $('#treeAddModal').modal();
+        if(so==null || so.length <=0){
+            window.iandtop.public.alert('#treeAlertArea',"请选择一个目录")
+            //$('<div>').appendTo('#treeAlertArea').addClass('alert alert-success').html('操作成功').show().delay(1500).fadeOut();
+        }else{
+            $('#treeAddModal').modal();
+        }
     });
 
+    //增加子节点
     $("#treeAddChildBtn").click(function () {
        // folderTree.treeview('remove');
         treeData.push({text:"pasfdasdfasdf"});

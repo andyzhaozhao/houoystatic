@@ -126,7 +126,7 @@
 
 })(window.iandtop.public || {});
 
-//恩拓公共组件
+//公共组件
 (function pub(s) {
     if (!window.iandtop.public) {
         window.iandtop.public = s;
@@ -134,12 +134,12 @@
 
     //定义全局变量
     if (typeof s.createDataTable == "undefined") {
-        function onSelectChange(_param){
+        function onSelectChange(_param) {
             //设置操作按钮状态
             var selectedNum = $("#" + _param.dataTableID).DataTable().rows('.selected').data().length;
-            var selectedRows = $("#" + _param.dataTableID).DataTable().rows('.selected').data() ;
-            if(_param.onSelectChange){
-                _param.onSelectChange(selectedNum,selectedRows);
+            var selectedRows = $("#" + _param.dataTableID).DataTable().rows('.selected').data();
+            if (_param.onSelectChange) {
+                _param.onSelectChange(selectedNum, selectedRows);
             }
         }
 
@@ -187,7 +187,7 @@
                     "dataSrc": function (d) {//后台返回的数据
                         return d.data;
                     }, "data": function (d) {//向后台传递的参数
-                        $.each(param.param, function(key, val) {
+                        $.each(param.param, function (key, val) {
                             d[key] = val();
                         });
                         //var name = searchDiv.find("input[name='name']").val();
@@ -313,8 +313,8 @@
                 getDataTable: function () {
                     return thisTable;
                 },
-                getSelectedRows:function(){
-                    return $("#" + param.dataTableID).DataTable().rows('.selected').data() ;
+                getSelectedRows: function () {
+                    return $("#" + param.dataTableID).DataTable().rows('.selected').data();
                 },
                 refresh: function () {
                     $("#" + param.dataTableID).DataTable().draw();
@@ -322,6 +322,40 @@
             };
 
         };
+    }
+
+
+})(window.iandtop.public || {});
+
+
+//自动消失的bootstrape警告框
+(function pub(s) {
+    if (!window.iandtop.public) {
+        window.iandtop.public = s;
+    }
+
+    //定义全局变量
+    if (typeof s.alert == "undefined") {
+        s.alert = function (id, msg,type) {
+            var typeclass = "";
+            switch (type) {
+                case "success":
+                    typeclass = "'alert alert-success'";
+                    break;
+                case "info":
+                    typeclass = "alert alert-info";
+                    break;
+                case "danger":
+                    typeclass = "alert alert-danger";
+                    break;
+                default:
+                    typeclass = "alert alert-warning";
+                    break;
+            }
+            $('<div>').appendTo(id).addClass(typeclass).html(msg).show().delay(1500).fadeOut();
+        }
+
+
     }
 
 
