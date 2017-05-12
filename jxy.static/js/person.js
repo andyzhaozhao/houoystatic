@@ -4,7 +4,7 @@
  */
 (function (person) {
     //定义页面数据模型
-    person.pageModel = window.iandtop.public.createPageModel();
+    person.pageModel = window.houoy.public.createPageModel();
     person.pageModel.setCurrentData({
         pk_person: null,
         person_code: $("#person_code").val(),
@@ -33,8 +33,8 @@
     person.init = function () {
         //注册事件监听
         $("#addBtn").click(function () {
-            person.pageModel.setModal(window.iandtop.public.PageManage.UIModal.CARD);
-            person.pageModel.setUIState(window.iandtop.public.PageManage.UIState.CREATE);
+            person.pageModel.setModal(window.houoy.public.PageManage.UIModal.CARD);
+            person.pageModel.setUIState(window.houoy.public.PageManage.UIState.CREATE);
             person.resetCurrentData({//新增时候当前缓存数据是空
                 pk_person: null,
                 person_code: null,
@@ -46,14 +46,14 @@
         });
 
         $("#detailBtn").click(function () {
-            person.pageModel.setModal(window.iandtop.public.PageManage.UIModal.CARD);
+            person.pageModel.setModal(window.houoy.public.PageManage.UIModal.CARD);
             person.resetCurrentData(person.dataTable.getSelectedRows()[0]);//设置当前选中的行
             person.initPortrait();
         });
 
         $("#editBtn").click(function () {
-            person.pageModel.setModal(window.iandtop.public.PageManage.UIModal.CARD);
-            person.pageModel.setUIState(window.iandtop.public.PageManage.UIState.CREATE);
+            person.pageModel.setModal(window.houoy.public.PageManage.UIModal.CARD);
+            person.pageModel.setUIState(window.houoy.public.PageManage.UIState.CREATE);
             person.resetCurrentData(person.dataTable.getSelectedRows()[0]);//设置当前选中的行
             person.initPortrait();
         });
@@ -61,7 +61,7 @@
         $("#deleteBtn").click(function () {
             if (confirm('你确定要删除选择项目吗？')) {
                 person.delete(function () {
-                    person.pageModel.setModal(window.iandtop.public.PageManage.UIModal.LIST);
+                    person.pageModel.setModal(window.houoy.public.PageManage.UIModal.LIST);
                     person.refresh();
                 }, function () {
                 });
@@ -70,13 +70,13 @@
 
         $("#saveBtn").click(function () {
             person.save(function () {
-                person.pageModel.setUIState(window.iandtop.public.PageManage.UIState.SEARCH);
+                person.pageModel.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
             }, function () {
             });
         });
 
         $("#cancelBtn").click(function () {
-            person.pageModel.setUIState(window.iandtop.public.PageManage.UIState.SEARCH);
+            person.pageModel.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
             person.resetCurrentData({//新增时候当前缓存数据是空
                 pk_person: null,
                 person_code: null,
@@ -88,14 +88,14 @@
         });
 
         $("#toCardBtn").click(function () {
-            person.pageModel.setModal(window.iandtop.public.PageManage.UIModal.CARD);
+            person.pageModel.setModal(window.houoy.public.PageManage.UIModal.CARD);
             person.resetCurrentData(person.dataTable.getSelectedRows()[0]);//设置当前选中的行
         });
 
         $("#toListBtn").click(function () {
-            person.pageModel.setModal(window.iandtop.public.PageManage.UIModal.LIST);
-            person.pageModel.setUIState(window.iandtop.public.PageManage.UIState.SEARCH);
-            person.pageModel.setSelectState(window.iandtop.public.PageManage.DataState.NONE_SELECT);
+            person.pageModel.setModal(window.houoy.public.PageManage.UIModal.LIST);
+            person.pageModel.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
+            person.pageModel.setSelectState(window.houoy.public.PageManage.DataState.NONE_SELECT);
             person.refresh();
         });
 
@@ -116,7 +116,7 @@
         $('#imgAdd').fileinput({
             language: 'zh',
             showCaption: false, //是否显示标题,
-            uploadUrl: window.iandtop.public.static.contextPath + "/api/person/upload",//上传的地址
+            uploadUrl: window.houoy.public.static.contextPath + "/api/person/upload",//上传的地址
             uploadExtraData: function (previewId, index) {   //额外参数
                 var obj = {pk_person: person.pageModel.getCurrentData().pk_person};
                 return obj;
@@ -125,13 +125,13 @@
         });
 
         //初始化
-        person.pageModel.setUIState(window.iandtop.public.PageManage.UIState.SEARCH);//默认是查询状态
-        person.pageModel.setSelectState(window.iandtop.public.PageManage.DataState.NONE_SELECT);//默认是没有选中数据
-        person.pageModel.setModal(window.iandtop.public.PageManage.UIModal.LIST);//默认是列表模式
+        person.pageModel.setUIState(window.houoy.public.PageManage.UIState.SEARCH);//默认是查询状态
+        person.pageModel.setSelectState(window.houoy.public.PageManage.DataState.NONE_SELECT);//默认是没有选中数据
+        person.pageModel.setModal(window.houoy.public.PageManage.UIModal.LIST);//默认是列表模式
 
-        person.dataTable = window.iandtop.public.createDataTable({
+        person.dataTable = window.houoy.public.createDataTable({
             dataTableID: "table",
-            url: window.iandtop.public.static.contextPath + "/api/person/retrieve",
+            url: window.houoy.public.static.contextPath + "/api/person/retrieve",
             param: {//查询参数
                 person_code: function () {
                     return $("input[name='person_code']").val()
@@ -153,11 +153,11 @@
                 {"title": "社交用户手机号", 'data': 'mobile'}],
             onSelectChange: function (selectedNum, selectedRows) {
                 if (selectedNum > 1) {
-                    person.pageModel.setSelectState(window.iandtop.public.PageManage.DataState.MUL_SELECT);
+                    person.pageModel.setSelectState(window.houoy.public.PageManage.DataState.MUL_SELECT);
                 } else if (selectedNum == 1) {
-                    person.pageModel.setSelectState(window.iandtop.public.PageManage.DataState.ONE_SELECT);
+                    person.pageModel.setSelectState(window.houoy.public.PageManage.DataState.ONE_SELECT);
                 } else {
-                    person.pageModel.setSelectState(window.iandtop.public.PageManage.DataState.NONE_SELECT);//没有选中数据
+                    person.pageModel.setSelectState(window.houoy.public.PageManage.DataState.NONE_SELECT);//没有选中数据
                 }
             }
         });
@@ -176,10 +176,10 @@
             debugger;
             $.ajax({
                 type: 'post',
-                url: window.iandtop.public.static.contextPath + '/api/person/save',
+                url: window.houoy.public.static.contextPath + '/api/person/save',
                 contentType: "application/json;charset=UTF-8",
                 beforeSend: function (xhr) {
-                    xhr.setRequestHeader("x-auth-token", window.iandtop.public.static.getSessionID());  //使用spring session的token方式
+                    xhr.setRequestHeader("x-auth-token", window.houoy.public.static.getSessionID());  //使用spring session的token方式
                 },
                 dataType: "json",
                 data: JSON.stringify(person.pageModel.getCurrentData()),
@@ -202,10 +202,10 @@
     person.delete = function (onSuccess, onError) {
         var pk_persons = [];
         switch (person.pageModel.getModal()) {
-            case window.iandtop.public.PageManage.UIModal.CARD:
+            case window.houoy.public.PageManage.UIModal.CARD:
                 pk_persons[0] = person.pageModel.getCurrentData().pk_person;
                 break;
-            case window.iandtop.public.PageManage.UIModal.LIST:
+            case window.houoy.public.PageManage.UIModal.LIST:
                 $.each(person.dataTable.getSelectedRows(), function (index, value) {
                     pk_persons[index] = value.pk_person;
                 });
@@ -216,10 +216,10 @@
         debugger;//浏览器调试时使用
         $.ajax({
             type: 'post',
-            url: window.iandtop.public.static.contextPath + '/api/person/delete',
+            url: window.houoy.public.static.contextPath + '/api/person/delete',
             contentType: "application/json;charset=UTF-8",
             beforeSend: function (xhr) {
-                xhr.setRequestHeader("x-auth-token", window.iandtop.public.static.getSessionID());  //使用spring session的token方式
+                xhr.setRequestHeader("x-auth-token", window.houoy.public.static.getSessionID());  //使用spring session的token方式
             },
             dataType: "json",
             data: JSON.stringify(pk_persons),
@@ -242,9 +242,9 @@
     };
 
     person.initPortrait = function () {
-        $("#portrait").attr("src",window.iandtop.public.static.contextPath
+        $("#portrait").attr("src",window.houoy.public.static.contextPath
             + '/api/person/portrait?pk='+person.pageModel.getCurrentData().pk_person);
     };
 
     person.init();
-})(window.iandtop.person || {});
+})(window.houoy.person || {});

@@ -5,7 +5,7 @@
 (function (cms) {
     //定义页面数据模型
     var url = "http://localhost:8888";
-    cms.userModel = window.iandtop.public.createPageModel();
+    cms.userModel = window.houoy.public.createPageModel();
     cms.userModel.setCurrentData({
         id: null,
         title: $("#title").val(),
@@ -34,8 +34,8 @@
 
         //注册事件监听
         $("#addBtn").click(function () {
-            cms.userModel.setModal(window.iandtop.public.PageManage.UIModal.CARD);
-            cms.userModel.setUIState(window.iandtop.public.PageManage.UIState.CREATE);
+            cms.userModel.setModal(window.houoy.public.PageManage.UIModal.CARD);
+            cms.userModel.setUIState(window.houoy.public.PageManage.UIState.CREATE);
             cms.resetCurrentData({//新增时候当前缓存数据是空
                 id: null,
                 title: null,
@@ -45,15 +45,15 @@
         });
 
         $("#editBtn").click(function () {
-            cms.userModel.setModal(window.iandtop.public.PageManage.UIModal.CARD);
-            cms.userModel.setUIState(window.iandtop.public.PageManage.UIState.CREATE);
+            cms.userModel.setModal(window.houoy.public.PageManage.UIModal.CARD);
+            cms.userModel.setUIState(window.houoy.public.PageManage.UIState.CREATE);
             cms.resetCurrentData(cms.dataTable.getSelectedRows()[0]);//设置当前选中的行
         });
 
         $("#deleteBtn").click(function () {
             if (confirm('你确定要删除选择项目吗？')) {
                 cms.delete(function () {
-                    cms.userModel.setModal(window.iandtop.public.PageManage.UIModal.LIST);
+                    cms.userModel.setModal(window.houoy.public.PageManage.UIModal.LIST);
                     cms.refresh();
                 }, function () {
                 });
@@ -62,13 +62,13 @@
 
         $("#saveBtn").click(function () {
             cms.save(function () {
-                cms.userModel.setUIState(window.iandtop.public.PageManage.UIState.SEARCH);
+                cms.userModel.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
             }, function () {
             });
         });
 
         $("#cancelBtn").click(function () {
-            cms.userModel.setUIState(window.iandtop.public.PageManage.UIState.SEARCH);
+            cms.userModel.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
             cms.resetCurrentData({//新增时候当前缓存数据是空
                 id: null,
                 title: null,
@@ -78,14 +78,14 @@
         });
 
         $("#toCardBtn").click(function () {
-            cms.userModel.setModal(window.iandtop.public.PageManage.UIModal.CARD);
+            cms.userModel.setModal(window.houoy.public.PageManage.UIModal.CARD);
             cms.resetCurrentData(cms.dataTable.getSelectedRows()[0]);//设置当前选中的行
         });
 
         $("#toListBtn").click(function () {
-            cms.userModel.setModal(window.iandtop.public.PageManage.UIModal.LIST);
-            cms.userModel.setUIState(window.iandtop.public.PageManage.UIState.SEARCH);
-            cms.userModel.setSelectState(window.iandtop.public.PageManage.DataState.NONE_SELECT);
+            cms.userModel.setModal(window.houoy.public.PageManage.UIModal.LIST);
+            cms.userModel.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
+            cms.userModel.setSelectState(window.houoy.public.PageManage.DataState.NONE_SELECT);
             cms.refresh();
         });
 
@@ -100,11 +100,11 @@
         });
 
         //初始化
-        cms.userModel.setUIState(window.iandtop.public.PageManage.UIState.SEARCH);//默认是查询状态
-        cms.userModel.setSelectState(window.iandtop.public.PageManage.DataState.NONE_SELECT);//默认是没有选中数据
-        cms.userModel.setModal(window.iandtop.public.PageManage.UIModal.LIST);//默认是列表模式
+        cms.userModel.setUIState(window.houoy.public.PageManage.UIState.SEARCH);//默认是查询状态
+        cms.userModel.setSelectState(window.houoy.public.PageManage.DataState.NONE_SELECT);//默认是没有选中数据
+        cms.userModel.setModal(window.houoy.public.PageManage.UIModal.LIST);//默认是列表模式
 
-        cms.dataTable = window.iandtop.public.createDataTable({
+        cms.dataTable = window.houoy.public.createDataTable({
             dataTableID: "table",
             url: url+"/essay",
             param: {//查询参数
@@ -116,11 +116,11 @@
                 {"title": "副标题", 'data': 'subTitle'}],
             onSelectChange: function (selectedNum, selectedRows) {
                 if (selectedNum > 1) {
-                    cms.userModel.setSelectState(window.iandtop.public.PageManage.DataState.MUL_SELECT);
+                    cms.userModel.setSelectState(window.houoy.public.PageManage.DataState.MUL_SELECT);
                 } else if (selectedNum == 1) {
-                    cms.userModel.setSelectState(window.iandtop.public.PageManage.DataState.ONE_SELECT);
+                    cms.userModel.setSelectState(window.houoy.public.PageManage.DataState.ONE_SELECT);
                 } else {
-                    cms.userModel.setSelectState(window.iandtop.public.PageManage.DataState.NONE_SELECT);//没有选中数据
+                    cms.userModel.setSelectState(window.houoy.public.PageManage.DataState.NONE_SELECT);//没有选中数据
                 }
             }
         });
@@ -159,10 +159,10 @@
     cms.delete = function (onSuccess, onError) {
         var _ids = [];
         switch (cms.userModel.getModal()) {
-            case window.iandtop.public.PageManage.UIModal.CARD:
+            case window.houoy.public.PageManage.UIModal.CARD:
                 _ids[0] = cms.userModel.getCurrentData().id;
                 break;
-            case window.iandtop.public.PageManage.UIModal.LIST:
+            case window.houoy.public.PageManage.UIModal.LIST:
                 $.each(cms.dataTable.getSelectedRows(), function (index, value) {
                     _ids[index] = value.id;
                 });
@@ -196,6 +196,6 @@
     }
 
     cms.init();
-})(window.iandtop.cms || {});
+})(window.houoy.cms || {});
 
 

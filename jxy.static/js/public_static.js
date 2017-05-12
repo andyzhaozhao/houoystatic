@@ -2,15 +2,15 @@
  * 家校易全局变量
  * @author andyzhao
  */
-(function pub(iandtop) {
-    if (!window.iandtop) {
-        window.iandtop = iandtop;
+(function pub(houoy) {
+    if (!window.houoy) {
+        window.houoy = houoy;
     }
-})(window.iandtop || {});
+})(window.houoy || {});
 
 (function pub(s) {
-    if (!window.iandtop.public) {
-        window.iandtop.public = s;
+    if (!window.houoy.public) {
+        window.houoy.public = s;
     }
 
     //定义全局变量
@@ -22,12 +22,12 @@
                 return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [, ""])[1].replace(/\+/g, '%20')) || null;
             },
             getSessionID:function(){
-                return sessionStorage.getItem( window.iandtop.public.static.xauthtoken);
+                return sessionStorage.getItem( window.houoy.public.static.xauthtoken);
             },
             setSessionID:function(value){
-                sessionStorage.setItem(window.iandtop.public.static.xauthtoken,value);
+                sessionStorage.setItem(window.houoy.public.static.xauthtoken,value);
             }
         }
     }
 
-})(window.iandtop.public || {});
+})(window.houoy.public || {});

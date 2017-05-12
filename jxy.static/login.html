@@ -64,13 +64,13 @@
         } else {
             $.ajax({
                 type: 'post',
-                url: window.iandtop.public.static.contextPath + '/api/login/signin',
+                url: window.houoy.public.static.contextPath + '/api/login/signin',
                 contentType: "application/json;charset=UTF-8",
 //                xhrFields: {
 //                    withCredentials: true//使用withCredentials的方式解决跨域,ie10以上支持
 //                },
                 beforeSend: function (xhr) {
-                    xhr.setRequestHeader("x-auth-token",  window.iandtop.public.static.getSessionID()); //使用spring session的token方式
+                    xhr.setRequestHeader("x-auth-token",  window.houoy.public.static.getSessionID()); //使用spring session的token方式
                 },
                 dataType: "json",
                 data: JSON.stringify({
@@ -80,7 +80,7 @@
                 success: function (data, status, xhr) {
                     if (data.success) {
                         //存储当前的token
-                        window.iandtop.public.static.setSessionID(xhr.getResponseHeader("x-auth-token"));
+                        window.houoy.public.static.setSessionID(xhr.getResponseHeader("x-auth-token"));
                         location.href = "index.html";
                     } else {
                         alert(data.msg);
@@ -96,13 +96,13 @@
     $('#getSession').on('click', function () {
         $.ajax({
             type: 'post',
-            url: window.iandtop.public.static.contextPath + '/api/login/getSession',
+            url: window.houoy.public.static.contextPath + '/api/login/getSession',
             contentType: "application/json;charset=UTF-8",
 //            xhrFields: {
 //                withCredentials: true//使用withCredentials的方式解决跨域,ie10以上支持
 //            },
             beforeSend: function (xhr) {
-                xhr.setRequestHeader("x-auth-token", window.iandtop.public.static.getSessionID());  //使用spring session的token方式
+                xhr.setRequestHeader("x-auth-token", window.houoy.public.static.getSessionID());  //使用spring session的token方式
             },
             dataType: "json",
             data: "sfsd",

@@ -16,7 +16,7 @@
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a href="#" id="treeAddNextBtn">增加相邻目录</a></li>
+                            <li><a href="#" id="treeAddNextBtn">增加同级目录</a></li>
                             <li><a href="#" id="treeAddChildBtn">增加子目录</a></li>
                             <li><a href="#" id="treeEditBtn">编辑当前目录</a></li>
                             <li><a href="#" id="treeDeleteBtn">删除选中目录</a></li>
@@ -112,7 +112,7 @@
     </tr>
 </table>
 
-<!-- 模态框（Modal） -->
+<!-- 新增 编辑 模态框（Modal） -->
 <div class="modal fade" id="treeAddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -124,21 +124,10 @@
                 <div class="panel-body">
                     <form class="form-horizontal" role="form">
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">上级目录</label>
+                            <label for="foldeNnameIpt" class="col-sm-2 control-label">目录名称</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control pageStateCreate pageStateUpdate"
-                                       id="pkParentInt"
-                                       placeholder="上级目录pk" disabled>
-                                <input type="text" class="form-control pageStateCreate pageStateUpdate"
-                                       id="nameParentInt"
-                                       placeholder="上级目录名称" disabled>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="foldeNnameInt" class="col-sm-2 control-label">目录名称</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control pageStateCreate pageStateUpdate"
-                                       id="foldeNnameInt"
+                                <input type="text" class="form-control"
+                                       id="foldeNnameIpt"
                                        placeholder="输入名称">
                             </div>
                         </div>
@@ -147,70 +136,29 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">提交更改</button>
+                <button type="button" class="btn btn-primary" id="treeSaveBtn">提交更改</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<!-- 删除 模态框（Modal） -->
+<div class="modal fade" id="treeDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">您确定要删除目录<span id="deleteFolderSpan"></span>?</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="treeDeleteSureBtn">确定</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div>
 
 <script type="text/javascript" src="jxycms/js/image.js"></script>
-<script>
-    function getTree() {
-        var tree = [
-            {
-                text: "Parent 1",
-                nodes: [
-                    {
-                        text: "Child 1",
-                    },
-                    {
-                        text: "Child 2"
-                    }
-                ]
-            },
-            {
-                text: "Parent 2"
-            }
-        ];
-        return tree;
-    }
-
-    var folderTree = null;
-    var treeData = getTree();
-
-    function initTree (){
-        folderTree = $('#tree').treeview({data:treeData});
-    }
-
-    //增加相邻节点
-    $("#treeAddNextBtn").click(function () {
-       var so = folderTree.treeview('getSelected');
-        if(so==null || so.length <=0){
-            window.iandtop.public.alert('#treeAlertArea',"请选择一个目录")
-            //$('<div>').appendTo('#treeAlertArea').addClass('alert alert-success').html('操作成功').show().delay(1500).fadeOut();
-        }else{
-            $('#treeAddModal').modal();
-        }
-    });
-
-    //增加子节点
-    $("#treeAddChildBtn").click(function () {
-       // folderTree.treeview('remove');
-        treeData.push({text:"pasfdasdfasdf"});
-        initTree();
-    });
-
-    //搜索
-    $('#treeSearchInt').bind('input propertychange', function() {
-        folderTree.treeview('search', [$(this).val(), {
-            ignoreCase: true,     // case insensitive
-            exactMatch: false,    // like or equals
-            revealResults: true // reveal matching nodes
-        }]);
-    });
-
-    initTree();
-</script>
 </body>
 </html>
 

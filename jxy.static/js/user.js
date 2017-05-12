@@ -4,7 +4,7 @@
  */
 (function (user) {
     //定义页面数据模型
-    user.userModel = window.iandtop.public.createPageModel();
+    user.userModel = window.houoy.public.createPageModel();
     user.userModel.setCurrentData({
         pk_user: null,
         user_code: $("#user_code").val(),
@@ -29,8 +29,8 @@
     user.init = function () {
         //注册事件监听
         $("#addBtn").click(function () {
-            user.userModel.setModal(window.iandtop.public.PageManage.UIModal.CARD);
-            user.userModel.setUIState(window.iandtop.public.PageManage.UIState.CREATE);
+            user.userModel.setModal(window.houoy.public.PageManage.UIModal.CARD);
+            user.userModel.setUIState(window.houoy.public.PageManage.UIState.CREATE);
             user.resetCurrentData({//新增时候当前缓存数据是空
                 pk_user: null,
                 user_code: null,
@@ -41,15 +41,15 @@
         });
 
         $("#editBtn").click(function () {
-            user.userModel.setModal(window.iandtop.public.PageManage.UIModal.CARD);
-            user.userModel.setUIState(window.iandtop.public.PageManage.UIState.CREATE);
+            user.userModel.setModal(window.houoy.public.PageManage.UIModal.CARD);
+            user.userModel.setUIState(window.houoy.public.PageManage.UIState.CREATE);
             user.resetCurrentData(user.dataTable.getSelectedRows()[0]);//设置当前选中的行
         });
 
         $("#deleteBtn").click(function () {
             if (confirm('你确定要删除选择项目吗？')) {
                 user.delete(function () {
-                    user.userModel.setModal(window.iandtop.public.PageManage.UIModal.LIST);
+                    user.userModel.setModal(window.houoy.public.PageManage.UIModal.LIST);
                     user.refresh();
                 }, function () {
                 });
@@ -58,13 +58,13 @@
 
         $("#saveBtn").click(function () {
             user.save(function () {
-                user.userModel.setUIState(window.iandtop.public.PageManage.UIState.SEARCH);
+                user.userModel.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
             }, function () {
             });
         });
 
         $("#cancelBtn").click(function () {
-            user.userModel.setUIState(window.iandtop.public.PageManage.UIState.SEARCH);
+            user.userModel.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
             user.resetCurrentData({//新增时候当前缓存数据是空
                 pk_user: null,
                 user_code: null,
@@ -75,14 +75,14 @@
         });
 
         $("#toCardBtn").click(function () {
-            user.userModel.setModal(window.iandtop.public.PageManage.UIModal.CARD);
+            user.userModel.setModal(window.houoy.public.PageManage.UIModal.CARD);
             user.resetCurrentData(user.dataTable.getSelectedRows()[0]);//设置当前选中的行
         });
 
         $("#toListBtn").click(function () {
-            user.userModel.setModal(window.iandtop.public.PageManage.UIModal.LIST);
-            user.userModel.setUIState(window.iandtop.public.PageManage.UIState.SEARCH);
-            user.userModel.setSelectState(window.iandtop.public.PageManage.DataState.NONE_SELECT);
+            user.userModel.setModal(window.houoy.public.PageManage.UIModal.LIST);
+            user.userModel.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
+            user.userModel.setSelectState(window.houoy.public.PageManage.DataState.NONE_SELECT);
             user.refresh();
         });
 
@@ -114,7 +114,7 @@
 
             $.ajax({
                 type: 'post',
-                url:  window.iandtop.public.static.contextPath  + "/api/role/retrieve",
+                url:  window.houoy.public.static.contextPath  + "/api/role/retrieve",
                 contentType: "application/json;charset=UTF-8",
                 dataType: "json",
                 async:false,
@@ -266,13 +266,13 @@
         }
 
         //初始化
-        user.userModel.setUIState(window.iandtop.public.PageManage.UIState.SEARCH);//默认是查询状态
-        user.userModel.setSelectState(window.iandtop.public.PageManage.DataState.NONE_SELECT);//默认是没有选中数据
-        user.userModel.setModal(window.iandtop.public.PageManage.UIModal.LIST);//默认是列表模式
+        user.userModel.setUIState(window.houoy.public.PageManage.UIState.SEARCH);//默认是查询状态
+        user.userModel.setSelectState(window.houoy.public.PageManage.DataState.NONE_SELECT);//默认是没有选中数据
+        user.userModel.setModal(window.houoy.public.PageManage.UIModal.LIST);//默认是列表模式
 
-        user.dataTable = window.iandtop.public.createDataTable({
+        user.dataTable = window.houoy.public.createDataTable({
             dataTableID: "table",
-            url:  window.iandtop.public.static.contextPath  + "/root/base/user/retrieve",
+            url:  window.houoy.public.static.contextPath  + "/root/base/user/retrieve",
             param: {//查询参数
                 user_code: function(){return $("input[name='user_code']").val()},
                 user_name: function(){return $("input[name='user_name']").val()},
@@ -288,11 +288,11 @@
             ],
             onSelectChange: function (selectedNum, selectedRows) {
                 if (selectedNum > 1) {
-                    user.userModel.setSelectState(window.iandtop.public.PageManage.DataState.MUL_SELECT);
+                    user.userModel.setSelectState(window.houoy.public.PageManage.DataState.MUL_SELECT);
                 } else if (selectedNum == 1) {
-                    user.userModel.setSelectState(window.iandtop.public.PageManage.DataState.ONE_SELECT);
+                    user.userModel.setSelectState(window.houoy.public.PageManage.DataState.ONE_SELECT);
                 } else {
-                    user.userModel.setSelectState(window.iandtop.public.PageManage.DataState.NONE_SELECT);//没有选中数据
+                    user.userModel.setSelectState(window.houoy.public.PageManage.DataState.NONE_SELECT);//没有选中数据
                 }
             }
         });
@@ -309,7 +309,7 @@
 
             $.ajax({
                 type: 'post',
-                url:  window.iandtop.public.static.contextPath  + '/root/base/user/save',
+                url:  window.houoy.public.static.contextPath  + '/root/base/user/save',
                 contentType: "application/json;charset=UTF-8",
                 dataType: "json",
                 data: JSON.stringify(user.userModel.getCurrentData()),
@@ -332,10 +332,10 @@
     user.delete = function (onSuccess, onError) {
         var pk_users = [];
         switch (user.userModel.getModal()) {
-            case window.iandtop.public.PageManage.UIModal.CARD:
+            case window.houoy.public.PageManage.UIModal.CARD:
                 pk_users[0] = user.userModel.getCurrentData().pk_user;
                 break;
-            case window.iandtop.public.PageManage.UIModal.LIST:
+            case window.houoy.public.PageManage.UIModal.LIST:
                 $.each(user.dataTable.getSelectedRows(), function (index, value) {
                     pk_users[index] = value.pk_user;
                 });
@@ -346,7 +346,7 @@
 
         $.ajax({
             type: 'post',
-            url:  window.iandtop.public.static.contextPath  + '/root/base/user/delete',
+            url:  window.houoy.public.static.contextPath  + '/root/base/user/delete',
             contentType: "application/json;charset=UTF-8",
             dataType: "json",
             data: JSON.stringify(pk_users),
@@ -369,4 +369,4 @@
     }
 
     user.init();
-})(window.iandtop.role || {});
+})(window.houoy.role || {});

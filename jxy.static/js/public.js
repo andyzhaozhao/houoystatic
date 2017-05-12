@@ -2,16 +2,16 @@
  * 家校易全局
  * @author andyzhao
  */
-(function pub(iandtop) {
-    if (!window.iandtop) {
-        window.iandtop = iandtop;
+(function pub(houoy) {
+    if (!window.houoy) {
+        window.houoy = houoy;
     }
-})(window.iandtop || {});
+})(window.houoy || {});
 
 //页面模型
 (function pub(s) {
-    if (!window.iandtop.public) {
-        window.iandtop.public = s;
+    if (!window.houoy.public) {
+        window.houoy.public = s;
     }
 
     //定义全局变量
@@ -49,17 +49,17 @@
                 setUIState: function (_uiState) {
                     uiState = _uiState;
                     switch (_uiState) {
-                        case window.iandtop.public.PageManage.UIState.SEARCH:
+                        case window.houoy.public.PageManage.UIState.SEARCH:
                             $(".pageStateCreate").attr("disabled", true);
                             $(".pageStateUpdate").attr("disabled", true);
                             $(".pageStateSearch").attr("disabled", false);
                             break;
-                        case window.iandtop.public.PageManage.UIState.CREATE:
+                        case window.houoy.public.PageManage.UIState.CREATE:
                             $(".pageStateCreate").attr("disabled", false);
                             $(".pageStateUpdate").attr("disabled", false);
                             $(".pageStateSearch").attr("disabled", true);
                             break;
-                        case window.iandtop.public.PageManage.UIState.UPDATE:
+                        case window.houoy.public.PageManage.UIState.UPDATE:
                             $(".pageStateCreate").attr("disabled", false);
                             $(".pageStateUpdate").attr("disabled", false);
                             $(".pageStateSearch").attr("disabled", true);
@@ -75,15 +75,15 @@
                 setSelectState: function (_selectState) {
                     selectState = _selectState;
                     switch (_selectState) {
-                        case window.iandtop.public.PageManage.DataState.NONE_SELECT:
+                        case window.houoy.public.PageManage.DataState.NONE_SELECT:
                             $(".pageStateOneSelected").attr("disabled", true);
                             $(".pageStateMulSelected").attr("disabled", true);
                             break;
-                        case window.iandtop.public.PageManage.DataState.ONE_SELECT:
+                        case window.houoy.public.PageManage.DataState.ONE_SELECT:
                             $(".pageStateOneSelected").attr("disabled", false);
                             $(".pageStateMulSelected").attr("disabled", false);
                             break;
-                        case window.iandtop.public.PageManage.DataState.MUL_SELECT://包括选中一个
+                        case window.houoy.public.PageManage.DataState.MUL_SELECT://包括选中一个
                             $(".pageStateOneSelected").attr("disabled", true);
                             $(".pageStateMulSelected").attr("disabled", false);
                             break;
@@ -99,11 +99,11 @@
                 setModal: function (_modal) {
                     modal = _modal;
                     switch (_modal) {
-                        case window.iandtop.public.PageManage.UIModal.CARD:
+                        case window.houoy.public.PageManage.UIModal.CARD:
                             $(".modalList").hide();
                             $(".modalCard").show();
                             break;
-                        case window.iandtop.public.PageManage.UIModal.LIST:
+                        case window.houoy.public.PageManage.UIModal.LIST:
                             $(".modalList").show();
                             $(".modalCard").hide();
                             break;
@@ -124,12 +124,12 @@
         }
     }
 
-})(window.iandtop.public || {});
+})(window.houoy.public || {});
 
 //公共组件
 (function pub(s) {
-    if (!window.iandtop.public) {
-        window.iandtop.public = s;
+    if (!window.houoy.public) {
+        window.houoy.public = s;
     }
 
     //定义全局变量
@@ -182,7 +182,7 @@
                     "url": param.url,
                     type: 'post',//post跨域请求
                     beforeSend: function (xhr) {
-                        xhr.setRequestHeader("x-auth-token", window.iandtop.public.static.getSessionID());  //使用spring session的token方式
+                        xhr.setRequestHeader("x-auth-token", window.houoy.public.static.getSessionID());  //使用spring session的token方式
                     },
                     "dataSrc": function (d) {//后台返回的数据
                         return d.data;
@@ -325,13 +325,13 @@
     }
 
 
-})(window.iandtop.public || {});
+})(window.houoy.public || {});
 
 
 //自动消失的bootstrape警告框
 (function pub(s) {
-    if (!window.iandtop.public) {
-        window.iandtop.public = s;
+    if (!window.houoy.public) {
+        window.houoy.public = s;
     }
 
     //定义全局变量
@@ -359,4 +359,41 @@
     }
 
 
-})(window.iandtop.public || {});
+})(window.houoy.public || {});
+
+//网络请求相关
+(function pub(s) {
+    if (!window.houoy.public) {
+        window.houoy.public = s;
+    }
+
+    //post请求
+    if (typeof s.post == "undefined") {
+        s.post = function (url, data,onSuccess,onError) {
+            $.ajax({
+                type: 'post',
+                url: url,
+                contentType: "application/json;charset=UTF-8",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("x-auth-token", window.houoy.public.static.getSessionID());  //使用spring session的token方式
+                },
+                dataType: "json",
+                data: data,
+                success: function (data) {
+                    if(onSuccess){
+                        onSuccess(data);
+                    }
+                },
+                error: function (err) {
+                    if(onError){
+                        onError(err);
+                    }
+                }
+            });
+        }
+
+
+    }
+
+
+})(window.houoy.public || {});
