@@ -2,140 +2,126 @@
  * 角色管理
  * @author andyzhao
  */
-(function (cms) {
+(function (image) {
     //定义页面数据模型
-    var url = "http://localhost:8888/api/folder";
-    cms.userModel = window.houoy.public.createPageModel();
-    cms.userModel.setCurrentData({
-        id: null,
-        title: $("#title").val(),
-        subTitle: $("#subTitle").val(),
-        content: $("#content").val()
+    var url = "http://localhost:8888/api";
+    image.imageModel = window.houoy.public.createPageModel();
+    image.imageModel.setCurrentData({
+        pk_image: null,
+        image_code: $("#image_code").val(),
+        image_name: $("#image_name").val()
     });
 
-    cms.resetCurrentData = function (data) {
-        cms.userModel.getCurrentData().id = data.id;
-        cms.userModel.getCurrentData().title = data.title;
-        cms.userModel.getCurrentData().subTitle = data.subTitle;
-        cms.userModel.getCurrentData().content = data.content;
-        $("#title").val(cms.userModel.getCurrentData().title);
-        $("#subTitle").val(cms.userModel.getCurrentData().subTitle);
-        cms.um.setContent(cms.userModel.getCurrentData().content);
+    image.resetCurrentData = function (data) {
+        image.imageModel.getCurrentData().image_code = data.image_code;
+        image.imageModel.getCurrentData().image_name = data.image_name;
+        $("#image_code").val(image.imageModel.getCurrentData().image_code);
+        $("#image_name").val(image.imageModel.getCurrentData().image_name);
     };
 
     //定义页面成员方法
-    cms.init = function () {
-        cms.initTree();
-        //加载编辑器的容器
-        if (!cms.um) {
-            //debugger;
-            cms.um = new wangEditor('container');
-            cms.um.create();
-        }
+    image.init = function () {
+        image.initTree();
 
         //注册事件监听
         $("#addBtn").click(function () {
-            cms.userModel.setModal(window.houoy.public.PageManage.UIModal.CARD);
-            cms.userModel.setUIState(window.houoy.public.PageManage.UIState.CREATE);
-            cms.resetCurrentData({//新增时候当前缓存数据是空
-                id: null,
-                title: null,
-                subTitle: null,
-                content: null
+            image.imageModel.setModal(window.houoy.public.PageManage.UIModal.CARD);
+            image.imageModel.setUIState(window.houoy.public.PageManage.UIState.CREATE);
+            image.resetCurrentData({//新增时候当前缓存数据是空
+                image_code: null,
+                image_name: null
             });
         });
 
         $("#editBtn").click(function () {
-            cms.userModel.setModal(window.houoy.public.PageManage.UIModal.CARD);
-            cms.userModel.setUIState(window.houoy.public.PageManage.UIState.CREATE);
-            cms.resetCurrentData(cms.dataTable.getSelectedRows()[0]);//设置当前选中的行
+            image.imageModel.setModal(window.houoy.public.PageManage.UIModal.CARD);
+            image.imageModel.setUIState(window.houoy.public.PageManage.UIState.CREATE);
+            image.resetCurrentData(image.dataTable.getSelectedRows()[0]);//设置当前选中的行
         });
 
         $("#deleteBtn").click(function () {
             if (confirm('你确定要删除选择项目吗？')) {
-                cms.delete(function () {
-                    cms.userModel.setModal(window.houoy.public.PageManage.UIModal.LIST);
-                    cms.refresh();
+                image.delete(function () {
+                    image.imageModel.setModal(window.houoy.public.PageManage.UIModal.LIST);
+                    image.refresh();
                 }, function () {
                 });
             }
         });
 
         $("#saveBtn").click(function () {
-            cms.save(function () {
-                cms.userModel.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
+            image.save(function () {
+                image.imageModel.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
             }, function () {
             });
         });
 
         $("#cancelBtn").click(function () {
-            cms.userModel.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
-            cms.resetCurrentData({//新增时候当前缓存数据是空
-                id: null,
-                title: null,
-                subTitle: null,
-                content: null
+            image.imageModel.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
+            image.resetCurrentData({//新增时候当前缓存数据是空
+                image_code: null,
+                image_name: null
             });
         });
 
         $("#toCardBtn").click(function () {
-            cms.userModel.setModal(window.houoy.public.PageManage.UIModal.CARD);
-            cms.resetCurrentData(cms.dataTable.getSelectedRows()[0]);//设置当前选中的行
+            image.imageModel.setModal(window.houoy.public.PageManage.UIModal.CARD);
+            image.resetCurrentData(image.dataTable.getSelectedRows()[0]);//设置当前选中的行
         });
 
         $("#toListBtn").click(function () {
-            cms.userModel.setModal(window.houoy.public.PageManage.UIModal.LIST);
-            cms.userModel.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
-            cms.userModel.setSelectState(window.houoy.public.PageManage.DataState.NONE_SELECT);
-            cms.refresh();
+            image.imageModel.setModal(window.houoy.public.PageManage.UIModal.LIST);
+            image.imageModel.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
+            image.imageModel.setSelectState(window.houoy.public.PageManage.DataState.NONE_SELECT);
+            image.refresh();
         });
 
         $("#searchBtn").click(function () {
-            cms.refresh();
+            image.refresh();
         });
 
         $("#searchResetBtn").click(function () {
-            $("input[name='title']").val("");
-            $("input[name='content']").val("");
-            cms.refresh();
+            $("input[name='image_code']").val("");
+            $("input[name='image_name']").val("");
+            image.refresh();
         });
 
         //初始化
-        cms.userModel.setUIState(window.houoy.public.PageManage.UIState.SEARCH);//默认是查询状态
-        cms.userModel.setSelectState(window.houoy.public.PageManage.DataState.NONE_SELECT);//默认是没有选中数据
-        cms.userModel.setModal(window.houoy.public.PageManage.UIModal.LIST);//默认是列表模式
+        image.imageModel.setUIState(window.houoy.public.PageManage.UIState.SEARCH);//默认是查询状态
+        image.imageModel.setSelectState(window.houoy.public.PageManage.DataState.NONE_SELECT);//默认是没有选中数据
+        image.imageModel.setModal(window.houoy.public.PageManage.UIModal.LIST);//默认是列表模式
 
-        cms.dataTable = window.houoy.public.createDataTable({
+        image.dataTable = window.houoy.public.createDataTable({
             dataTableID: "table",
-            url: url + "/essay",
+            url: url + "/image/retrieve",
             param: {//查询参数
-                title: function () {
-                    return $("input[name='title']").val()
+                image_code: function () {
+                    return $("input[name='image_code']").val();
                 },
-                content: function () {
-                    return $("input[name='content']").val()
+                image_name: function () {
+                    return $("input[name='image_name']").val();
                 }
             },
-            columns: [{"title": "序列号", 'data': 'id', "visible": false},
-                {"title": "标题", 'data': 'title'},
-                {"title": "副标题", 'data': 'subTitle'}],
+            columns: [{"title": "pk", 'data': 'pk_image', "visible": false},
+                {"title": "图片编码", 'data': 'image_code'},
+                {"title": "图片名称", 'data': 'image_name'}],
             onSelectChange: function (selectedNum, selectedRows) {
                 if (selectedNum > 1) {
-                    cms.userModel.setSelectState(window.houoy.public.PageManage.DataState.MUL_SELECT);
+                    image.imageModel.setSelectState(window.houoy.public.PageManage.DataState.MUL_SELECT);
                 } else if (selectedNum == 1) {
-                    cms.userModel.setSelectState(window.houoy.public.PageManage.DataState.ONE_SELECT);
+                    image.imageModel.setSelectState(window.houoy.public.PageManage.DataState.ONE_SELECT);
                 } else {
-                    cms.userModel.setSelectState(window.houoy.public.PageManage.DataState.NONE_SELECT);//没有选中数据
+                    image.imageModel.setSelectState(window.houoy.public.PageManage.DataState.NONE_SELECT);//没有选中数据
                 }
             }
         });
     };
 
-    cms.initTree = function () {
+    image.initTree = function () {
         var folderTree = null;
-
+        var foldeNnameIpt = $("#foldeNnameIpt");
         function loadTree() {
-            window.houoy.public.post(url + '/retrieve', null, function (data) {
+            window.houoy.public.post(url + '/folder/retrieve', null, function (data) {
                 if (data.success) {
                     var treeData = data.resultData.nodes;
                     folderTree = $('#tree').treeview({data: treeData});
@@ -208,9 +194,9 @@
                         break;
                 }
 
-                $("#foldeNnameIpt").prop("folderCode", folderCode);
-                $("#foldeNnameIpt").prop("pkParent", pkParent);
-                $("#foldeNnameIpt").prop("pk_folder", null);
+                foldeNnameIpt.prop("folderCode", folderCode);
+                foldeNnameIpt.prop("pkParent", pkParent);
+                foldeNnameIpt.prop("pk_folder", null);
                 $('#treeAddModal').modal();
             }
         }
@@ -221,10 +207,10 @@
             if (so == null || so.length <= 0) {
                 window.houoy.public.alert('#treeAlertArea', "请选择一个目录")
             } else {
-                $("#foldeNnameIpt").prop("folderCode", so[0].folder_code);
-                $("#foldeNnameIpt").prop("pkParent",  so[0].pk_parent);
-                $("#foldeNnameIpt").prop("pk_folder",  so[0].pk_folder);
-                $("#foldeNnameIpt").val(so[0].folder_name);
+                foldeNnameIpt.prop("folderCode", so[0].folder_code);
+                foldeNnameIpt.prop("pkParent",  so[0].pk_parent);
+                foldeNnameIpt.prop("pk_folder",  so[0].pk_folder);
+                foldeNnameIpt.val(so[0].folder_name);
                 $('#treeAddModal').modal();
             }
         }
@@ -232,13 +218,13 @@
         //保存节点
         $("#treeSaveBtn").click(function () {
             var paramData = {
-                pk_folder: $("#foldeNnameIpt").prop("pk_folder"),
-                pk_parent: $("#foldeNnameIpt").prop("pkParent"),
-                folder_code: $("#foldeNnameIpt").prop("folderCode"),
-                folder_name: $("#foldeNnameIpt").val()
+                pk_folder: foldeNnameIpt.prop("pk_folder"),
+                pk_parent: foldeNnameIpt.prop("pkParent"),
+                folder_code: foldeNnameIpt.prop("folderCode"),
+                folder_name: foldeNnameIpt.val()
             };
 
-            window.houoy.public.post(url + '/save', JSON.stringify(paramData), function (data) {
+            window.houoy.public.post(url + '/folder/save', JSON.stringify(paramData), function (data) {
                 if (data.success) {
                     loadTree();
                 } else {
@@ -255,7 +241,7 @@
         $("#treeDeleteSureBtn").click(function(){
             var paramData = [$("#deleteFolderSpan").prop("pk_folder")];
 
-            window.houoy.public.post(url + '/delete', JSON.stringify(paramData), function (data) {
+            window.houoy.public.post(url + '/folder/delete', JSON.stringify(paramData), function (data) {
                 if (data.success) {
                     loadTree();
                 } else {
@@ -280,20 +266,19 @@
         loadTree();
     };
 
-    cms.save = function (onSuccess, onError) {
-        if (!($("#title").val()) || !($("#subTitle").val())) {
+    image.save = function (onSuccess, onError) {
+        if (!($("#image_name").val()) || !($("#image_code").val())) {
             alert("请填写完整信息");
         } else {
-            cms.userModel.getCurrentData().title = $("#title").val();
-            cms.userModel.getCurrentData().subTitle = $("#subTitle").val();
-            cms.userModel.getCurrentData().content = cms.um.getContent();
+            image.imageModel.getCurrentData().image_name = $("#image_name").val();
+            image.imageModel.getCurrentData().image_code = $("#image_code").val();
 
             $.ajax({
                 type: 'post',
-                url: url + '/essay',
+                url: url + '/image/save',
                 contentType: "application/json;charset=UTF-8",
                 dataType: "json",
-                data: JSON.stringify(cms.userModel.getCurrentData()),
+                data: JSON.stringify(image.imageModel.getCurrentData()),
                 success: function (data) {
                     if (data.success) {
                         alert("保存成功");
@@ -310,14 +295,14 @@
         }
     };
 
-    cms.delete = function (onSuccess, onError) {
+    image.delete = function (onSuccess, onError) {
         var _ids = [];
-        switch (cms.userModel.getModal()) {
+        switch (image.imageModel.getModal()) {
             case window.houoy.public.PageManage.UIModal.CARD:
-                _ids[0] = cms.userModel.getCurrentData().id;
+                _ids[0] = image.imageModel.getCurrentData().id;
                 break;
             case window.houoy.public.PageManage.UIModal.LIST:
-                $.each(cms.dataTable.getSelectedRows(), function (index, value) {
+                $.each(image.dataTable.getSelectedRows(), function (index, value) {
                     _ids[index] = value.id;
                 });
                 break;
@@ -327,7 +312,7 @@
 
         $.ajax({
             type: 'delete',
-            url: url + '/delete',
+            url: url + '/image/delete',
             contentType: "application/json;charset=UTF-8",
             dataType: "json",
             data: JSON.stringify(_ids),
@@ -345,11 +330,11 @@
         });
     };
 
-    cms.refresh = function () {
-        cms.dataTable.refresh();
+    image.refresh = function () {
+        image.dataTable.refresh();
     };
 
-    cms.init();
-})(window.houoy.cms || {});
+    image.init();
+})(window.houoy.image || {});
 
 
