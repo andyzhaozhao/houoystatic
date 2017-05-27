@@ -9,7 +9,8 @@
     image.imageModel.setCurrentData({
         pk_image: null,
         image_code: $("#image_code").val(),
-        image_name: $("#image_name").val()
+        image_name: $("#image_name").val(),
+        select_node_id: 0//默认选中的树节点
     });
 
     image.resetCurrentData = function (data) {
@@ -117,155 +118,6 @@
         });
     };
 
-    image.initTree = function () {
-        var folderTree = null;
-        var foldeNnameIpt = $("#foldeNnameIpt");
-        function loadTree() {
-            window.houoy.public.post(url + '/folder/retrieve', null, function (data) {
-                if (data.success) {
-                    var treeData = data.resultData.nodes;
-                    folderTree = $('#tree').treeview({data: treeData});
-                } else {
-                    alert("获取tree失败:" + data.msg);
-                }
-            }, function (err) {
-                alert("获取tree失败！" + err);
-            });
-        }
-
-        //增加同级节点
-        $("#treeAddNextBtn").click(function () {
-            openAddModal("sibing") ;
-        });
-
-        //增加子节点
-        $("#treeAddChildBtn").click(function () {
-            openAddModal("child") ;
-        });
-
-        //编辑当前节点
-        $("#treeEditBtn").click(function () {
-            openEditModal();
-        });
-
-        //删除当前节点
-        $("#treeDeleteBtn").click(function () {
-            var so = folderTree.treeview('getSelected');
-            if (so == null || so.length <= 0) {
-                window.houoy.public.alert('#treeAlertArea', "请选择一个目录")
-            } else {
-                $("#deleteFolderSpan").text(so[0].folder_name);
-                $("#deleteFolderSpan").prop("pk_folder",  so[0].pk_folder);
-                $('#treeDeleteModal').modal();
-            }
-        });
-
-        //添加节点
-        function openAddModal(type) {
-            var so = folderTree.treeview('getSelected');
-            if (so == null || so.length <= 0) {
-                window.houoy.public.alert('#treeAlertArea', "请选择一个目录")
-            } else {
-                var folderCode = null;
-                var pkParent = null;
-
-                switch (type) {
-                    case "child":
-                        pkParent = so[0].pk_folder;
-                        if(so[0].nodes){//如果有子节点
-                            folderCode = so[0].folder_code + ((1000 + so[0].nodes.length + 1) + "").substr(1);//获得新节点的folderCode
-                        }else{
-                            folderCode = so[0].folder_code + "001";//获得新节点的folderCode
-                        }
-                        break;
-                    case "sibing":
-                        if ( so[0].parentId == null ||  so[0].parentId == undefined) {//如果是一级节点
-                            var siblingLength = folderTree.treeview('getSiblings', so[0]).length;
-                            folderCode = ((1000000 + siblingLength + 2) + "").substr(1);//获得新节点的folderCode
-                            pkParent = "1";
-                        } else {//如果存在，说明当前选中的不是一级节点
-                            var parentNode = folderTree.treeview('getNode',  so[0].parentId);
-                            var n = ((1000 + parentNode.nodes.length + 1) + "").substr(1);//获得新节点的folderCode
-                            folderCode = parentNode.folder_code + n;
-                            pkParent = parentNode.pk_folder;
-                        }
-                        break;
-                    default:
-                        break;
-                }
-
-                foldeNnameIpt.prop("folderCode", folderCode);
-                foldeNnameIpt.prop("pkParent", pkParent);
-                foldeNnameIpt.prop("pk_folder", null);
-                $('#treeAddModal').modal();
-            }
-        }
-
-        //编辑节点
-        function openEditModal() {
-            var so = folderTree.treeview('getSelected');
-            if (so == null || so.length <= 0) {
-                window.houoy.public.alert('#treeAlertArea', "请选择一个目录")
-            } else {
-                foldeNnameIpt.prop("folderCode", so[0].folder_code);
-                foldeNnameIpt.prop("pkParent",  so[0].pk_parent);
-                foldeNnameIpt.prop("pk_folder",  so[0].pk_folder);
-                foldeNnameIpt.val(so[0].folder_name);
-                $('#treeAddModal').modal();
-            }
-        }
-
-        //保存节点
-        $("#treeSaveBtn").click(function () {
-            var paramData = {
-                pk_folder: foldeNnameIpt.prop("pk_folder"),
-                pk_parent: foldeNnameIpt.prop("pkParent"),
-                folder_code: foldeNnameIpt.prop("folderCode"),
-                folder_name: foldeNnameIpt.val()
-            };
-
-            window.houoy.public.post(url + '/folder/save', JSON.stringify(paramData), function (data) {
-                if (data.success) {
-                    loadTree();
-                } else {
-                    alert("增加失败:" + data.msg);
-                }
-                $('#treeAddModal').modal("hide");
-            }, function (err) {
-                alert("增加失败！" + err.responseText);
-                $('#treeAddModal').modal("hide");
-            });
-        });
-
-        //删除
-        $("#treeDeleteSureBtn").click(function(){
-            var paramData = [$("#deleteFolderSpan").prop("pk_folder")];
-
-            window.houoy.public.post(url + '/folder/delete', JSON.stringify(paramData), function (data) {
-                if (data.success) {
-                    loadTree();
-                } else {
-                    alert("删除失败:" + data.msg);
-                }
-                $('#treeDeleteModal').modal("hide");
-            }, function (err) {
-                alert("删除失败" + err.responseText);
-                $('#treeDeleteModal').modal("hide");
-            });
-        });
-
-        //搜索
-        $('#treeSearchInt').bind('input propertychange', function () {
-            folderTree.treeview('search', [$(this).val(), {
-                ignoreCase: true,     // case insensitive
-                exactMatch: false,    // like or equals
-                revealResults: true // reveal matching nodes
-            }]);
-        });
-
-        loadTree();
-    };
-
     image.save = function (onSuccess, onError) {
         if (!($("#image_name").val()) || !($("#image_code").val())) {
             alert("请填写完整信息");
@@ -332,6 +184,181 @@
 
     image.refresh = function () {
         image.dataTable.refresh();
+    };
+
+    image.initTree = function (onSuccess) {
+        var folderTree = null;
+        var foldeNameIpt = $("#foldeNameIpt");
+        var deleteFolderSpan = $("#deleteFolderSpan");
+
+        function loadTree(onLoadSuccess) {
+            window.houoy.public.post(url + '/folder/retrieve', null, function (data) {
+                if (data.success) {
+                    var treeData = data.resultData.nodes;
+                    folderTree = $('#tree').treeview({data: treeData});
+                    onLoadSuccess();
+                } else {
+                    alert("获取tree失败:" + data.msg);
+                }
+            }, function (err) {
+                alert("获取tree失败！" + err);
+            });
+        }
+
+        function onLoadSuccess() {
+            debugger;
+            folderTree.treeview('selectNode', [image.imageModel.getCurrentData().select_node_id, { silent: false } ]);
+
+        }
+
+        //增加同级节点
+        $("#treeAddNextBtn").click(function () {
+            openAddModal("sibing");
+        });
+
+        //增加子节点
+        $("#treeAddChildBtn").click(function () {
+            openAddModal("child");
+        });
+
+        //编辑当前节点
+        $("#treeEditBtn").click(function () {
+            openEditModal();
+        });
+
+        //删除当前节点
+        $("#treeDeleteBtn").click(function () {
+            var so = folderTree.treeview('getSelected');
+            if (so == null || so.length <= 0) {
+                window.houoy.public.alert('#treeAlertArea', "请选择一个目录")
+            } else {
+                deleteFolderSpan.text(so[0].folder_name);
+                deleteFolderSpan.prop("pk_folder", so[0].pk_folder);
+                $('#treeDeleteModal').modal();
+            }
+        });
+
+        //添加节点
+        function openAddModal(type) {
+            var so = folderTree.treeview('getSelected');
+            if (so == null || so.length <= 0) {
+                window.houoy.public.alert('#treeAlertArea', "请选择一个目录")
+            } else {
+                var folderCode = null;
+                var pkParent = null;
+
+                switch (type) {
+                    case "child":
+                        pkParent = so[0].pk_folder;
+                        if (so[0].nodes) {//如果有子节点
+                            folderCode = so[0].folder_code + ((1000 + so[0].nodes.length + 1) + "").substr(1);//获得新节点的folderCode
+                        } else {
+                            folderCode = so[0].folder_code + "001";//获得新节点的folderCode
+                        }
+                        break;
+                    case "sibing":
+                        if (so[0].parentId == null || so[0].parentId == undefined) {//如果是一级节点
+                            var siblingLength = folderTree.treeview('getSiblings', so[0]).length;
+                            folderCode = ((1000000 + siblingLength + 2) + "").substr(1);//获得新节点的folderCode
+                            pkParent = "1";
+                        } else {//如果存在，说明当前选中的不是一级节点
+                            var parentNode = folderTree.treeview('getNode', so[0].parentId);
+                            var n = ((1000 + parentNode.nodes.length + 1) + "").substr(1);//获得新节点的folderCode
+                            folderCode = parentNode.folder_code + n;
+                            pkParent = parentNode.pk_folder;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                foldeNameIpt.prop("folderCode", folderCode);
+                foldeNameIpt.prop("pkParent", pkParent);
+                foldeNameIpt.prop("pk_folder", null);
+                $('#treeAddModal').modal();
+            }
+        }
+
+        //编辑节点
+        function openEditModal() {
+            var so = folderTree.treeview('getSelected');
+            if (so == null || so.length <= 0) {
+                window.houoy.public.alert('#treeAlertArea', "请选择一个目录")
+            } else {
+                foldeNameIpt.prop("folderCode", so[0].folder_code);
+                foldeNameIpt.prop("pkParent", so[0].pk_parent);
+                foldeNameIpt.prop("pk_folder", so[0].pk_folder);
+                foldeNameIpt.val(so[0].folder_name);
+                $('#treeAddModal').modal();
+            }
+        }
+
+        //保存节点
+        $("#treeSaveBtn").click(function () {
+            var paramData = {
+                pk_folder: foldeNameIpt.prop("pk_folder"),
+                pk_parent: foldeNameIpt.prop("pkParent"),
+                folder_code: foldeNameIpt.prop("folderCode"),
+                folder_name: foldeNameIpt.val()
+            };
+
+            window.houoy.public.post(url + '/folder/save', JSON.stringify(paramData), function (data) {
+                if (data.success) {
+                    image.imageModel.getCurrentData().select_node_id = folderTree.treeview('getSelected')[0].nodeId;
+                    loadTree(onLoadSuccess);
+                } else {
+                    alert("增加失败:" + data.msg);
+                }
+                $('#treeAddModal').modal("hide");
+            }, function (err) {
+                alert("增加失败！" + err.responseText);
+                $('#treeAddModal').modal("hide");
+            });
+        });
+
+        //删除
+        $("#treeDeleteSureBtn").click(function () {
+            var paramData = [deleteFolderSpan.prop("pk_folder")];
+
+
+            var paramDD = ""
+            window.houoy.public.post('http://localhost:9999/dpm/device/list', JSON.stringify(paramData), function (data) {
+                if (data.success) {
+                    image.imageModel.getCurrentData().select_node_id = 0 ;
+                    loadTree(onLoadSuccess);
+                } else {
+                    alert("删除失败:" + data.msg);
+                }
+                $('#treeDeleteModal').modal("hide");
+            }, function (err) {
+                alert("删除失败" + err.responseText);
+                $('#treeDeleteModal').modal("hide");
+            });
+
+            //window.houoy.public.post(url + '/folder/delete', JSON.stringify(paramData), function (data) {
+            //    if (data.success) {
+            //        image.imageModel.getCurrentData().select_node_id = 0 ;
+            //        loadTree(onLoadSuccess);
+            //    } else {
+            //        alert("删除失败:" + data.msg);
+            //    }
+            //    $('#treeDeleteModal').modal("hide");
+            //}, function (err) {
+            //    alert("删除失败" + err.responseText);
+            //    $('#treeDeleteModal').modal("hide");
+            //});
+        });
+
+        //搜索
+        $('#treeSearchInt').bind('input propertychange', function () {
+            folderTree.treeview('search', [$(this).val(), {
+                ignoreCase: true,     // case insensitive
+                exactMatch: false,    // like or equals
+                revealResults: true // reveal matching nodes
+            }]);
+        });
+
+        loadTree(onLoadSuccess);
     };
 
     image.init();
