@@ -5,210 +5,224 @@
 (function (image) {
     //定义页面数据模型
     var url = "http://localhost:8888/api";
-    image.imageModel = window.houoy.public.createPageModel();
-    image.imageModel.setCurrentData({
-        pk_image: null,
-        image_code: $("#image_code").val(),
-        image_name: $("#image_name").val(),
-        select_node_id: 0//默认选中的树节点
-    });
+    image.model = (function () {
+        if (!image.model) {
+            image.model = {};
+        }
 
-    image.resetCurrentData = function (data) {
-        image.imageModel.getCurrentData().image_code = data.image_code;
-        image.imageModel.getCurrentData().image_name = data.image_name;
-        $("#image_code").val(image.imageModel.getCurrentData().image_code);
-        $("#image_name").val(image.imageModel.getCurrentData().image_name);
-    };
-
-    //定义页面成员方法
-    image.init = function () {
-        image.initTree();
-
-        //注册事件监听
-        $("#addBtn").click(function () {
-            image.imageModel.setModal(window.houoy.public.PageManage.UIModal.CARD);
-            image.imageModel.setUIState(window.houoy.public.PageManage.UIState.CREATE);
-            image.resetCurrentData({//新增时候当前缓存数据是空
-                image_code: null,
-                image_name: null
-            });
+        image.model = window.houoy.public.createPageModel();
+        image.model.setCurrentData({
+            pk_image: null,
+            image_code: $("#image_code").val(),
+            image_name: $("#image_name").val(),
+            select_node_id: 0,//默认选中的树节点
+            pk_folder: ""
         });
 
-        $("#editBtn").click(function () {
-            image.imageModel.setModal(window.houoy.public.PageManage.UIModal.CARD);
-            image.imageModel.setUIState(window.houoy.public.PageManage.UIState.CREATE);
-            image.resetCurrentData(image.dataTable.getSelectedRows()[0]);//设置当前选中的行
-        });
+        image.resetCurrentData = function (data) {
+            image.model.getCurrentData().image_code = data.image_code;
+            image.model.getCurrentData().image_name = data.image_name;
+            $("#image_code").val(image.model.getCurrentData().image_code);
+            $("#image_name").val(image.model.getCurrentData().image_name);
+        };
 
-        $("#deleteBtn").click(function () {
-            if (confirm('你确定要删除选择项目吗？')) {
-                image.delete(function () {
-                    image.imageModel.setModal(window.houoy.public.PageManage.UIModal.LIST);
-                    image.refresh();
-                }, function () {
-                });
-            }
-        });
+        return image.model;
+    })();
 
-        $("#saveBtn").click(function () {
-            image.save(function () {
-                image.imageModel.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
-            }, function () {
-            });
-        });
+    image.view = (function () {
+        if (!image.view) {
+            image.view = {};
+        }
 
-        $("#cancelBtn").click(function () {
-            image.imageModel.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
-            image.resetCurrentData({//新增时候当前缓存数据是空
-                image_code: null,
-                image_name: null
-            });
-        });
+        image.view.new = function () {
+            //初始化模型
+            image.model.setUIState(window.houoy.public.PageManage.UIState.SEARCH);//默认是查询状态
+            image.model.setSelectState(window.houoy.public.PageManage.DataState.NONE_SELECT);//默认是没有选中数据
+            image.model.setModal(window.houoy.public.PageManage.UIModal.LIST);//默认是列表模式
 
-        $("#toCardBtn").click(function () {
-            image.imageModel.setModal(window.houoy.public.PageManage.UIModal.CARD);
-            image.resetCurrentData(image.dataTable.getSelectedRows()[0]);//设置当前选中的行
-        });
-
-        $("#toListBtn").click(function () {
-            image.imageModel.setModal(window.houoy.public.PageManage.UIModal.LIST);
-            image.imageModel.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
-            image.imageModel.setSelectState(window.houoy.public.PageManage.DataState.NONE_SELECT);
-            image.refresh();
-        });
-
-        $("#searchBtn").click(function () {
-            image.refresh();
-        });
-
-        $("#searchResetBtn").click(function () {
-            $("input[name='image_code']").val("");
-            $("input[name='image_name']").val("");
-            image.refresh();
-        });
-
-        //初始化
-        image.imageModel.setUIState(window.houoy.public.PageManage.UIState.SEARCH);//默认是查询状态
-        image.imageModel.setSelectState(window.houoy.public.PageManage.DataState.NONE_SELECT);//默认是没有选中数据
-        image.imageModel.setModal(window.houoy.public.PageManage.UIModal.LIST);//默认是列表模式
-
-        image.dataTable = window.houoy.public.createDataTable({
-            dataTableID: "table",
-            url: url + "/image/retrieve",
-            param: {//查询参数
-                image_code: function () {
-                    return $("input[name='image_code']").val();
+            //初始化表格
+            image.dataTable = window.houoy.public.createDataTable({
+                dataTableID: "table",
+                url: url + "/image/retrieve",
+                param: {//查询参数
+                    image_code: function () {
+                        return $("input[name='image_code']").val();
+                    },
+                    image_name: function () {
+                        return $("input[name='image_name']").val();
+                    },
+                    pk_folder: function () {
+                        return image.model.getCurrentData().pk_folder;
+                    }
                 },
-                image_name: function () {
-                    return $("input[name='image_name']").val();
+                columns: [{"title": "pk", 'data': 'pk_image', "visible": false},
+                    {"title": "图片编码", 'data': 'image_code'},
+                    {"title": "图片名称", 'data': 'image_name'}],
+                onSelectChange: function (selectedNum, selectedRows) {
+                    if (selectedNum > 1) {
+                        image.model.setSelectState(window.houoy.public.PageManage.DataState.MUL_SELECT);
+                    } else if (selectedNum == 1) {
+                        image.model.setSelectState(window.houoy.public.PageManage.DataState.ONE_SELECT);
+                    } else {
+                        image.model.setSelectState(window.houoy.public.PageManage.DataState.NONE_SELECT);//没有选中数据
+                    }
                 }
-            },
-            columns: [{"title": "pk", 'data': 'pk_image', "visible": false},
-                {"title": "图片编码", 'data': 'image_code'},
-                {"title": "图片名称", 'data': 'image_name'}],
-            onSelectChange: function (selectedNum, selectedRows) {
-                if (selectedNum > 1) {
-                    image.imageModel.setSelectState(window.houoy.public.PageManage.DataState.MUL_SELECT);
-                } else if (selectedNum == 1) {
-                    image.imageModel.setSelectState(window.houoy.public.PageManage.DataState.ONE_SELECT);
-                } else {
-                    image.imageModel.setSelectState(window.houoy.public.PageManage.DataState.NONE_SELECT);//没有选中数据
-                }
-            }
-        });
-    };
+            });
+        };
 
-    image.save = function (onSuccess, onError) {
-        if (!($("#image_name").val()) || !($("#image_code").val())) {
-            alert("请填写完整信息");
-        } else {
-            image.imageModel.getCurrentData().image_name = $("#image_name").val();
-            image.imageModel.getCurrentData().image_code = $("#image_code").val();
+        return image.view;
+    }());
 
-            $.ajax({
-                type: 'post',
-                url: url + '/image/save',
-                contentType: "application/json;charset=UTF-8",
-                dataType: "json",
-                data: JSON.stringify(image.imageModel.getCurrentData()),
-                success: function (data) {
+    image.controller = (function () {
+        if (!image.controller) {
+            image.controller = {};
+        }
+
+        image.controller.toAdd = function () {
+            image.model.setModal(window.houoy.public.PageManage.UIModal.CARD);
+            image.model.setUIState(window.houoy.public.PageManage.UIState.CREATE);
+            image.resetCurrentData({//新增时候当前缓存数据是空
+                image_code: null,
+                image_name: null
+            });
+        };
+
+        image.controller.toEdit = function () {
+            image.model.setModal(window.houoy.public.PageManage.UIModal.CARD);
+            image.model.setUIState(window.houoy.public.PageManage.UIState.CREATE);
+            image.resetCurrentData(image.dataTable.getSelectedRows()[0]);//设置当前选中的行
+        };
+
+        image.controller.toList = function () {
+            image.model.setModal(window.houoy.public.PageManage.UIModal.LIST);
+            image.model.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
+            image.model.setSelectState(window.houoy.public.PageManage.DataState.NONE_SELECT);
+            image.controller.search();
+        };
+
+        image.controller.toCard = function () {
+            image.model.setModal(window.houoy.public.PageManage.UIModal.CARD);
+            image.resetCurrentData(image.dataTable.getSelectedRows()[0]);//设置当前选中的行
+        };
+
+        image.controller.saveRow = function () {
+            if (!($("#image_name").val()) || !($("#image_code").val())) {
+                alert("请填写完整信息");
+            } else {
+                image.model.getCurrentData().image_name = $("#image_name").val();
+                image.model.getCurrentData().image_code = $("#image_code").val();
+
+                window.houoy.public.post(url + '/image/save', JSON.stringify(image.model.getCurrentData()), function (data) {
                     if (data.success) {
                         alert("保存成功");
-                        onSuccess();
+                        image.model.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
                     } else {
                         alert("保存失败:" + data.msg);
                     }
-                },
-                error: function (data) {
-                    alert("保存失败！" + data);
-                    onError();
-                }
-            });
-        }
-    };
-
-    image.delete = function (onSuccess, onError) {
-        var _ids = [];
-        switch (image.imageModel.getModal()) {
-            case window.houoy.public.PageManage.UIModal.CARD:
-                _ids[0] = image.imageModel.getCurrentData().id;
-                break;
-            case window.houoy.public.PageManage.UIModal.LIST:
-                $.each(image.dataTable.getSelectedRows(), function (index, value) {
-                    _ids[index] = value.id;
+                }, function (err) {
+                    alert("请求保存失败！" + err);
                 });
-                break;
-            default:
-                break;
-        }
-
-        $.ajax({
-            type: 'delete',
-            url: url + '/image/delete',
-            contentType: "application/json;charset=UTF-8",
-            dataType: "json",
-            data: JSON.stringify(_ids),
-            success: function (data) {
-                if (data.success) {
-                    onSuccess();
-                } else {
-                    alert("删除失败:" + data);
-                }
-            },
-            error: function (data) {
-                alert("删除失败！");
-                onError();
             }
-        });
-    };
+        };
 
-    image.refresh = function () {
-        image.dataTable.refresh();
-    };
+        image.controller.deleteRow = function () {
+            if (confirm('你确定要删除选择项目吗？')) {
+                var _ids = [];
+                switch (image.model.getModal()) {
+                    case window.houoy.public.PageManage.UIModal.CARD:
+                        _ids[0] = image.model.getCurrentData().id;
+                        break;
+                    case window.houoy.public.PageManage.UIModal.LIST:
+                        $.each(image.dataTable.getSelectedRows(), function (index, value) {
+                            _ids[index] = value.id;
+                        });
+                        break;
+                    default:
+                        break;
+                }
+
+                window.houoy.public.post(url + '/image/delete', JSON.stringify(_ids), function (data) {
+                    if (data.success) {
+                        image.model.setModal(window.houoy.public.PageManage.UIModal.LIST);
+                        image.controller.search();
+                    } else {
+                        alert("删除失败:" + data);
+                    }
+                }, function (err) {
+                    alert("请求删除失败！");
+                });
+
+                //$.ajax({
+                //    type: 'delete',
+                //    url: url + '/image/delete',
+                //    contentType: "application/json;charset=UTF-8",
+                //    dataType: "json",
+                //    data: JSON.stringify(_ids),
+                //    success: function (data) {
+                //        if (data.success) {
+                //            image.model.setModal(window.houoy.public.PageManage.UIModal.LIST);
+                //            image.refresh();
+                //        } else {
+                //            alert("删除失败:" + data);
+                //        }
+                //    },
+                //    error: function (data) {
+                //        alert("删除失败！");
+                //    }
+                //});
+            }
+        };
+
+        //取消所有行操作
+        image.controller.cancelRow = function () {
+            image.model.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
+            image.resetCurrentData({//新增时候当前缓存数据是空
+                image_code: null,
+                image_name: null
+            });
+        };
+
+        //刷新表格数据
+        image.controller.search = function () {
+            image.dataTable.refresh();
+        };
+
+        //搜索区reset
+        image.controller.searchReset = function () {
+            $("input[name='image_code']").val("");
+            $("input[name='image_name']").val("");
+            image.controller.search();
+        };
+
+        return image.controller;
+    }());
 
     image.initTree = function (onSuccess) {
         var folderTree = null;
         var foldeNameIpt = $("#foldeNameIpt");
         var deleteFolderSpan = $("#deleteFolderSpan");
 
-        function loadTree(onLoadSuccess) {
+        function loadTree() {
             window.houoy.public.post(url + '/folder/retrieve', null, function (data) {
                 if (data.success) {
                     var treeData = data.resultData.nodes;
-                    folderTree = $('#tree').treeview({data: treeData});
-                    onLoadSuccess();
+                    folderTree = $('#tree').treeview({
+                        data: treeData,
+                        onNodeSelected: function (event, data) {
+                            image.model.getCurrentData().select_node_id = data.nodeId;
+                            image.model.getCurrentData().pk_folder =data.pk_folder;
+                            //刷新列表区
+                            image.controller.search();
+                        }
+                    });
+
+                    folderTree.treeview('selectNode', [image.model.getCurrentData().select_node_id, {silent: false}]);
                 } else {
                     alert("获取tree失败:" + data.msg);
                 }
             }, function (err) {
                 alert("获取tree失败！" + err);
             });
-        }
-
-        function onLoadSuccess() {
-            debugger;
-            folderTree.treeview('selectNode', [image.imageModel.getCurrentData().select_node_id, { silent: false } ]);
-
         }
 
         //增加同级节点
@@ -304,8 +318,8 @@
 
             window.houoy.public.post(url + '/folder/save', JSON.stringify(paramData), function (data) {
                 if (data.success) {
-                    image.imageModel.getCurrentData().select_node_id = folderTree.treeview('getSelected')[0].nodeId;
-                    loadTree(onLoadSuccess);
+                    image.model.getCurrentData().select_node_id = folderTree.treeview('getSelected')[0].nodeId;
+                    loadTree();
                 } else {
                     alert("增加失败:" + data.msg);
                 }
@@ -320,12 +334,11 @@
         $("#treeDeleteSureBtn").click(function () {
             var paramData = [deleteFolderSpan.prop("pk_folder")];
 
-
-            var paramDD = ""
+            var paramDD = "";
             window.houoy.public.post('http://localhost:9999/dpm/device/list', JSON.stringify(paramData), function (data) {
                 if (data.success) {
-                    image.imageModel.getCurrentData().select_node_id = 0 ;
-                    loadTree(onLoadSuccess);
+                    image.model.getCurrentData().select_node_id = 0;
+                    loadTree();
                 } else {
                     alert("删除失败:" + data.msg);
                 }
@@ -337,8 +350,8 @@
 
             //window.houoy.public.post(url + '/folder/delete', JSON.stringify(paramData), function (data) {
             //    if (data.success) {
-            //        image.imageModel.getCurrentData().select_node_id = 0 ;
-            //        loadTree(onLoadSuccess);
+            //        image.model.getCurrentData().select_node_id = 0 ;
+            //        loadTree();
             //    } else {
             //        alert("删除失败:" + data.msg);
             //    }
@@ -358,10 +371,26 @@
             }]);
         });
 
-        loadTree(onLoadSuccess);
+        loadTree();
     };
 
-    image.init();
+    image.registerEvent = function () {
+        //注册事件监听
+        $("#toAddBtn").click(image.controller.toAdd);
+        $("#toEditBtn").click(image.controller.toEdit);
+        $("#toCardBtn").click(image.controller.toCard);
+        $("#toListBtn").click(image.controller.toList);
+        $("#deleteBtn").click(image.controller.deleteRow);
+        $("#saveBtn").click(image.controller.saveRow);
+        $("#cancelBtn").click(image.controller.cancelRow);
+        $("#searchBtn").click(image.controller.search);
+        $("#searchResetBtn").click(image.controller.searchReset);
+    };
+
+    image.view.new();
+    image.initTree();
+    image.registerEvent();
+
 })(window.houoy.image || {});
 
 
