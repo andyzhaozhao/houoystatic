@@ -109,19 +109,49 @@
             if (!($("#image_name").val()) || !($("#image_code").val())) {
                 alert("请填写完整信息");
             } else {
+
                 image.model.getCurrentData().image_name = $("#image_name").val();
                 image.model.getCurrentData().image_code = $("#image_code").val();
 
-                window.houoy.public.post(url + '/image/save', JSON.stringify(image.model.getCurrentData()), function (data) {
-                    if (data.success) {
-                        alert("保存成功");
-                        image.model.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
-                    } else {
-                        alert("保存失败:" + data.msg);
+                var formData = new FormData();
+                formData.append("file",$("#imageFile")[0].files[0]);
+                formData.append("image_name",image.model.getCurrentData().image_name);
+                formData.append("image_code",image.model.getCurrentData().image_code);
+                formData.append("pk_folder",image.model.getCurrentData().pk_folder);
+                $.ajax({
+                    url : url + '/image/save',
+                    type : 'POST',
+                    data : formData,
+                    cache: false, //上传文件不需要缓存。
+                    processData : false, // 告诉jQuery不要去处理发送的数据
+                    contentType : false,// 告诉jQuery不要去设置Content-Type请求头
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("x-auth-token", window.houoy.public.static.getSessionID());  //使用spring session的token方式
+                    },
+                    success : function(responseStr) {
+                        if(responseStr.status===0){
+                            console.log("成功"+responseStr);
+                        }else{
+                            console.log("失败");
+                        }
+                    },
+                    error : function(responseStr) {
+                        console.log("error");
                     }
-                }, function (err) {
-                    alert("请求保存失败！" + err);
                 });
+
+
+                //
+                //window.houoy.public.post(url + '/image/save', JSON.stringify(image.model.getCurrentData()), function (data) {
+                //    if (data.success) {
+                //        alert("保存成功");
+                //        image.model.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
+                //    } else {
+                //        alert("保存失败:" + data.msg);
+                //    }
+                //}, function (err) {
+                //    alert("请求保存失败！" + err);
+                //});
             }
         };
 
