@@ -20,10 +20,12 @@
         });
 
         image.resetCurrentData = function (data) {
+            image.model.getCurrentData().pk_image = data.pk_image;
             image.model.getCurrentData().image_code = data.image_code;
             image.model.getCurrentData().image_name = data.image_name;
             $("#image_code").val(image.model.getCurrentData().image_code);
             $("#image_name").val(image.model.getCurrentData().image_name);
+            $("#pk_image").val(image.model.getCurrentData().pk_image);
         };
 
         return image.model;
@@ -85,12 +87,19 @@
                 image_code: null,
                 image_name: null
             });
+            $("#imageshow").hide();
         };
 
         image.controller.toEdit = function () {
             image.model.setModal(window.houoy.public.PageManage.UIModal.CARD);
             image.model.setUIState(window.houoy.public.PageManage.UIState.CREATE);
             image.resetCurrentData(image.dataTable.getSelectedRows()[0]);//设置当前选中的行
+            var srcstr = "http://47.94.6.120/image/"+image.model.getCurrentData().path+
+                "/"+image.dataTable.getSelectedRows()[0].image_name;
+            debugger;
+            $("#imageshow").attr("src",srcstr);
+            $("#imageshowpath").text(srcstr);
+            $("#imageshow").show();
         };
 
         image.controller.toList = function () {
@@ -103,6 +112,12 @@
         image.controller.toCard = function () {
             image.model.setModal(window.houoy.public.PageManage.UIModal.CARD);
             image.resetCurrentData(image.dataTable.getSelectedRows()[0]);//设置当前选中的行
+            var srcstr = "http://47.94.6.120/image/"+image.model.getCurrentData().path+
+                "/"+image.dataTable.getSelectedRows()[0].image_name;
+            debugger;
+            $("#imageshow").attr("src",srcstr);
+            $("#imageshowpath").text(srcstr);
+            $("#imageshow").show();
         };
 
         image.controller.saveRow = function () {
@@ -114,29 +129,35 @@
                 image.model.getCurrentData().image_code = $("#image_code").val();
 
                 var formData = new FormData();
-                formData.append("file",$("#imageFile")[0].files[0]);
-                formData.append("image_name",image.model.getCurrentData().image_name);
-                formData.append("image_code",image.model.getCurrentData().image_code);
-                formData.append("pk_folder",image.model.getCurrentData().pk_folder);
+                formData.append("file", $("#imageFile")[0].files[0]);
+                if(image.model.getCurrentData().pk_image){
+                    formData.append("pk_image", image.model.getCurrentData().pk_image);
+                }
+                formData.append("image_name", image.model.getCurrentData().image_name);
+                formData.append("image_code", image.model.getCurrentData().image_code);
+                formData.append("pk_folder", image.model.getCurrentData().pk_folder);
+                formData.append("path", image.model.getCurrentData().path);
+
                 $.ajax({
-                    url : url + '/image/save',
-                    type : 'POST',
-                    data : formData,
+                    url: url + '/image/save',
+                    type: 'POST',
+                    data: formData,
                     cache: false, //上传文件不需要缓存。
-                    processData : false, // 告诉jQuery不要去处理发送的数据
-                    contentType : false,// 告诉jQuery不要去设置Content-Type请求头
+                    processData: false, // 告诉jQuery不要去处理发送的数据
+                    contentType: false,// 告诉jQuery不要去设置Content-Type请求头
                     beforeSend: function (xhr) {
                         xhr.setRequestHeader("x-auth-token", window.houoy.public.static.getSessionID());  //使用spring session的token方式
                     },
-                    success : function(responseStr) {
-                        if(responseStr.status===0){
-                            console.log("成功"+responseStr);
-                        }else{
-                            console.log("失败");
+                    success: function (data) {
+                        if (data.success) {
+                            alert("保存成功");
+                            image.model.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
+                        } else {
+                            alert("保存失败:" + data.msg);
                         }
                     },
-                    error : function(responseStr) {
-                        console.log("error");
+                    error: function (data) {
+                        alert("保存失败:" + data.msg);
                     }
                 });
 
@@ -232,6 +253,23 @@
         var foldeNameIpt = $("#foldeNameIpt");
         var deleteFolderSpan = $("#deleteFolderSpan");
 
+        //获得节点的当前路径
+        function getPath(cn) {
+            function stepAdd(currentNode) {
+                var parentNode = $('#tree').treeview('getParent', currentNode.nodeId);
+                if (parentNode.hasOwnProperty("nodeId")) {
+                    nodePath = parentNode.text + "/" + nodePath;
+                    if (parentNode.hasOwnProperty("parentId")) {
+                        stepAdd(parentNode);
+                    }
+                }
+            }
+
+            var nodePath = cn.text;
+            stepAdd(cn);
+            return nodePath;
+        }
+
         function loadTree() {
             window.houoy.public.post(url + '/folder/retrieve', null, function (data) {
                 if (data.success) {
@@ -240,7 +278,8 @@
                         data: treeData,
                         onNodeSelected: function (event, data) {
                             image.model.getCurrentData().select_node_id = data.nodeId;
-                            image.model.getCurrentData().pk_folder =data.pk_folder;
+                            image.model.getCurrentData().pk_folder = data.pk_folder;
+                            image.model.getCurrentData().path = getPath(data);
                             //刷新列表区
                             image.controller.search();
                         }
@@ -415,6 +454,13 @@
         $("#cancelBtn").click(image.controller.cancelRow);
         $("#searchBtn").click(image.controller.search);
         $("#searchResetBtn").click(image.controller.searchReset);
+        $('#imageFile').change(function(){
+            var str = $(this).val();
+            var arr=str.split('\\');//注split可以用字符或字符串分割
+            var my=arr[arr.length-1];//这就是要取得的图片名称
+            $('#image_name').val(my);
+            debugger;
+        })
     };
 
     image.view.new();
