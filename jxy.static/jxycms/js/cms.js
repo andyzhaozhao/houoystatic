@@ -4,7 +4,7 @@
  */
 (function (cms) {
     //定义页面数据模型
-    var url = "http://localhost:8888";
+    var url = window.houoy.public.static.cmsContextPath+"/api" ;
     cms.userModel = window.houoy.public.createPageModel();
     cms.userModel.setCurrentData({
         id: null,

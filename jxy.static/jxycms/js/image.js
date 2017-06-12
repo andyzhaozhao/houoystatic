@@ -4,7 +4,8 @@
  */
 (function (image) {
     //定义页面数据模型
-    var url = "http://localhost:8888/api";
+    //var url = "http://localhost:8888/api";
+    var url = window.houoy.public.static.cmsContextPath+"/api" ;
     image.model = (function () {
         if (!image.model) {
             image.model = {};

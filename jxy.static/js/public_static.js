@@ -17,6 +17,7 @@
     if (typeof s.static == "undefined") {
         s.static = {
             contextPath: "http://localhost:8889",//后端服务器地址
+            cmsContextPath: "http://localhost:8888",//后端服务器地址
             xauthtoken: "com.jiaxiaoyi.xauthtoken",//sessionid的token
             getURLParameter: function (name) {//获得页面url参数
                 return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [, ""])[1].replace(/\+/g, '%20')) || null;
