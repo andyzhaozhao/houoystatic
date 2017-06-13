@@ -24,12 +24,16 @@
     <div class="form-inline">
         <div class="form-group">
             <label>文章标题</label>
-            <input type="number" class="form-control" name="title">
+            <input type="number" class="form-control" name="essay_name">
         </div>
         <div class="form-group">
-            <label>文章内容</label>
-            <input type="text" class="form-control" name="content">
+            <label>文章标题</label>
+            <input type="number" class="form-control" name="essay_subname">
         </div>
+        <!--<div class="form-group">-->
+            <!--<label>文章内容</label>-->
+            <!--<input type="text" class="form-control" name="essay_content">-->
+        <!--</div>-->
         <button class="btn btn-default" id="searchBtn">查询</button>
         <button class="btn btn-default" id="searchResetBtn">重置</button>
     </div>
@@ -46,16 +50,16 @@
     <div class="panel-body">
         <form class="form-horizontal" role="form">
             <div class="form-group">
-                <label for="title" class="col-sm-2 col- control-label">标题</label>
+                <label for="essay_name" class="col-sm-2 col- control-label">标题</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control pageStateCreate pageStateUpdate" id="title"
+                    <input type="text" class="form-control pageStateCreate pageStateUpdate" id="essay_name"
                            placeholder="标题">
                 </div>
             </div>
             <div class="form-group">
-                <label for="subTitle" class="col-sm-2 control-label">副标题</label>
+                <label for="essay_subname" class="col-sm-2 control-label">副标题</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control pageStateCreate pageStateUpdate" id="subTitle"
+                    <input type="text" class="form-control pageStateCreate pageStateUpdate" id="essay_subname"
                            placeholder="副标题">
                 </div>
             </div>
