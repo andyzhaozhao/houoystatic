@@ -16,6 +16,8 @@
 
     <!--引入wangEditor.css-->
     <link rel="stylesheet" type="text/css" href="../bowerlib/wangEditor/dist/css/wangEditor.min.css">
+
+    <link rel="stylesheet" type="text/css" href="../bowerlib/smalot-bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">
 </head>
 <body>
 <nav class="navbar navbar-default navbar-static-top" role="navigation">
@@ -96,6 +98,32 @@
             </ul>
         </li>
         <li>
+            <a href="#relationperson" class="nav-header collapsed" data-toggle="collapse">
+                <i class="glyphicon glyphicon-cog"></i>
+                用户间关系
+                <span class="pull-right glyphicon glyphicon-chevron-down"></span>
+            </a>
+            <ul id="relationperson" class="nav nav-list collapse">
+                <li><a href="javascript:indexNavigate('jxy/person.html')"><i
+                        class="glyphicon glyphicon-edit"></i>关注关系</a></li>
+                <li><a href="javascript:indexNavigate('jxy/habbit.html')"><i
+                        class="glyphicon glyphicon-edit"></i>已经邀请关系</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#relationpersonWithPro" class="nav-header collapsed" data-toggle="collapse">
+                <i class="glyphicon glyphicon-cog"></i>
+                产品与用户关系
+                <span class="pull-right glyphicon glyphicon-chevron-down"></span>
+            </a>
+            <ul id="relationpersonWithPro" class="nav nav-list collapse">
+                <li><a href="javascript:indexNavigate('jxy/person.html')"><i
+                        class="glyphicon glyphicon-edit"></i>按用户查看</a></li>
+                <li><a href="javascript:indexNavigate('jxy/habbit.html')"><i
+                        class="glyphicon glyphicon-edit"></i>按产品查看</a></li>
+            </ul>
+        </li>
+        <li>
             <a href="#cms" class="nav-header collapsed" data-toggle="collapse">
                 <i class="glyphicon glyphicon-credit-card"></i>
                 文章内容管理
@@ -105,14 +133,17 @@
                 <li><a href="javascript:indexNavigate('jxycms/image.html')">
                     <i class="glyphicon glyphicon-user"></i>图片资源管理</a>
                 </li>
-                <li><a href="javascript:indexNavigate('jxycms/cms.html')">
-                    <i class="glyphicon glyphicon-user"></i>编辑发布</a>
+                <li><a href="javascript:indexNavigate('jxycms/essaytype.html')">
+                    <i class="glyphicon glyphicon-asterisk"></i>文章类别管理</a>
                 </li>
-                <li><a href="javascript:indexNavigate('jxycms/cmslist.html')">
-                    <i class="glyphicon glyphicon-asterisk"></i>发布列表</a>
+                <li><a href="javascript:indexNavigate('jxycms/cms.html')">
+                    <i class="glyphicon glyphicon-user"></i>文章编辑</a>
                 </li>
                 <li><a href="javascript:indexNavigate('jxycms/cmspro.html')">
                     <i class="glyphicon glyphicon-asterisk"></i>草稿箱</a>
+                </li>
+                <li><a href="javascript:indexNavigate('jxycms/cmslist.html')">
+                    <i class="glyphicon glyphicon-asterisk"></i>发布列表</a>
                 </li>
             </ul>
         </li>
@@ -144,6 +175,8 @@
 <script type="text/javascript" src="../bowerlib/bootstrap-treeview/public/js/bootstrap-treeview.js"></script>
 
 <script type="text/javascript" src="../bowerlib/wangEditor/dist/js/wangEditor.min.js"></script>
+
+<script type="text/javascript" src="../bowerlib/smalot-bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
 
 <script type="text/javascript" src="js/public_static.js"></script>
 <script type="text/javascript" src="js/public.js"></script>

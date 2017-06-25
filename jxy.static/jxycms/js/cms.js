@@ -1,5 +1,5 @@
 /**
- * 角色管理
+ *
  * @author andyzhao
  */
 (function (cms) {
@@ -115,6 +115,8 @@
             cms.refresh();
         });
 
+        $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii'});
+debugger;
         //初始化
         cms.model.setUIState(window.houoy.public.PageManage.UIState.SEARCH);//默认是查询状态
         cms.model.setSelectState(window.houoy.public.PageManage.DataState.NONE_SELECT);//默认是没有选中数据

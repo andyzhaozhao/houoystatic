@@ -405,7 +405,7 @@
             var paramData = [deleteFolderSpan.prop("pk_folder")];
 
             var paramDD = "";
-            window.houoy.public.post('http://localhost:9999/dpm/device/list', JSON.stringify(paramData), function (data) {
+            window.houoy.public.post(url + '/folder/delete', JSON.stringify(paramData), function (data) {
                 if (data.success) {
                     image.model.getCurrentData().select_node_id = 0;
                     loadTree();

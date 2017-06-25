@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>images</title>
+</head>
+<body>
+<table class="table ">
+    <tr>
+        <td class="modalList">
+            <div class="row well well-sm">
+                <div class="btn-group">
+                    <div class="btn-group">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default" id="treeAddNextBtn">增加同级目录</button>
+                            <button type="button" class="btn btn-default" id="treeAddChildBtn">增加子目录</button>
+                            <button type="button" class="btn btn-default" id="treeEditBtn">编辑当前目录</button>
+                            <button type="button" class="btn btn-default" id="treeDeleteBtn">删除选中目录</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <input type="text" class="form-control" placeholder="Search" id="treeSearchInt">
+                </div>
+            </div>
+            <div class="row" id="treeAlertArea">
+
+            </div>
+            <div class="row">
+                <div id="tree">
+
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<!-- 新增 编辑 模态框（Modal） -->
+<div class="modal fade" id="treeAddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">新增</h4>
+            </div>
+            <div class="modal-body">
+                <div class="panel-body">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label for="nameIpt" class="col-sm-2 control-label">名称</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control"
+                                       id="nameIpt"
+                                       placeholder="输入名称">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="treeSaveBtn">提交更改</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<!-- 删除 模态框（Modal） -->
+<div class="modal fade" id="treeDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">您确定要删除<span id="deleteSpan"></span>?</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="treeDeleteSureBtn">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<script type="text/javascript" src="jxycms/js/essaytype.js"></script>
+</body>
+</html>
+
+
+
+
+
