@@ -5,12 +5,17 @@
 (function (cms) {
     //定义页面数据模型
     var url = window.houoy.public.static.cmsContextPath + "/api/essay";
+    var urlTree = window.houoy.public.static.cmsContextPath+"/api" ;
+
     cms.model = window.houoy.public.createPageModel();
     cms.model.setCurrentData({
         pk_essay: null,
         essay_name: $("#essay_name").val(),
         essay_subname: $("#essay_subname").val(),
-        essay_content: $("#essay_content").val()
+        essay_content: $("#essay_content").val(),
+        ts_start: $("#ts_start").val(),
+        ts_end: $("#ts_end").val(),
+        select_node:{}
     });
 
     cms.resetCurrentData = function (data) {
@@ -18,9 +23,15 @@
         cms.model.getCurrentData().essay_name = data.essay_name;
         cms.model.getCurrentData().essay_subname = data.essay_subname;
         cms.model.getCurrentData().essay_content = data.essay_content;
+        cms.model.getCurrentData().ts_start = data.ts_start;
+        cms.model.getCurrentData().ts_end = data.ts_end;
+        cms.model.getCurrentData().select_node = data.select_node;
         $("#essay_name").val(cms.model.getCurrentData().essay_name);
         $("#essay_subname").val(cms.model.getCurrentData().essay_subname);
-        debugger;
+        $("#ts_start").val(cms.model.getCurrentData().ts_start);
+        $("#ts_end").val(cms.model.getCurrentData().ts_end);
+        $("#pk_type").val(cms.model.getCurrentData().select_node.pk_type);
+
         cms.contentSet('<p>用 JS 设置的内容</p>');
         cms.contentSet(cms.model.getCurrentData().essay_content);
     };
@@ -28,14 +39,13 @@
     cms.initWangEditor = function () {
         //加载编辑器的容器
         if (!cms.um) {
-            debugger;
             cms.um = new window.wangEditor('container');
             cms.um.create();
         }
     };
 
     cms.contentSet = function (c) {
-       cms.um.$txt.html(s);
+       cms.um.$txt.html(c);
     };
 
     cms.contentGet = function () {
@@ -53,7 +63,10 @@
                 pk_essay: null,
                 essay_name: null,
                 essay_subname: null,
-                essay_content: null
+                essay_content: null,
+                ts_start:null,
+                ts_end:null,
+                select_node:{}
             });
         });
 
@@ -88,7 +101,10 @@
                 pk_essay: null,
                 essay_name: null,
                 essay_subname: null,
-                essay_content: null
+                essay_content: null,
+                ts_start:null,
+                ts_end:null,
+                select_node:{}
             });
         });
 
@@ -116,7 +132,7 @@
         });
 
         $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii'});
-debugger;
+
         //初始化
         cms.model.setUIState(window.houoy.public.PageManage.UIState.SEARCH);//默认是查询状态
         cms.model.setSelectState(window.houoy.public.PageManage.DataState.NONE_SELECT);//默认是没有选中数据
@@ -135,7 +151,11 @@ debugger;
             },
             columns: [{"title": "序列号", 'data': 'pk_essay', "visible": false},
                 {"title": "标题", 'data': 'essay_name'},
-                {"title": "副标题", 'data': 'essay_subname'}],
+                {"title": "副标题", 'data': 'essay_subname'},
+                {"title": "开始时间", 'data': 'ts_start'},
+                {"title": "结束时间", 'data': 'ts_end'},
+                {"title": "类型", 'data': 'pk_type'}
+            ],
             onSelectChange: function (selectedNum, selectedRows) {
                 if (selectedNum > 1) {
                     cms.model.setSelectState(window.houoy.public.PageManage.DataState.MUL_SELECT);
@@ -155,6 +175,9 @@ debugger;
             cms.model.getCurrentData().essay_name = $("#essay_name").val();
             cms.model.getCurrentData().essay_subname = $("#essay_subname").val();
             cms.model.getCurrentData().essay_content = cms.contentGet();
+            cms.model.getCurrentData().ts_start = $("#ts_start").val();
+            cms.model.getCurrentData().ts_end = $("#ts_end").val();
+            cms.model.getCurrentData().pk_type = cms.model.getCurrentData().select_node.pk_type;
 
             window.houoy.public.post(url + '/save', JSON.stringify(cms.model.getCurrentData()), function (data) {
                 if (data.success) {
@@ -200,7 +223,72 @@ debugger;
         cms.dataTable.refresh();
     };
 
-    cms.init();
+    cms.initTree = function (onSuccess) {
+        var typeTree = null;
+
+        //获得节点的当前路径
+        function getPath(cn) {
+            function stepAdd(currentNode) {
+                var parentNode = $('#tree').treeview('getParent', currentNode.nodeId);
+                if (parentNode.hasOwnProperty("nodeId")) {
+                    nodePath = parentNode.text + "/" + nodePath;
+                    if (parentNode.hasOwnProperty("parentId")) {
+                        stepAdd(parentNode);
+                    }
+                }
+            }
+
+            var nodePath = cn.text;
+            stepAdd(cn);
+            return nodePath;
+        }
+
+        function loadTree() {
+            window.houoy.public.post(urlTree + '/essaytype/retrieve', null, function (data) {
+                if (data.success) {
+                    var treeData = data.resultData.nodes;
+                    typeTree = $('#tree').treeview({
+                        data: treeData
+                    });
+                    onSuccess();
+                } else {
+                    alert("获取tree失败:" + data.msg);
+                }
+            }, function (err) {
+                alert("获取tree失败！" + err);
+            });
+        }
+
+        //改变选中项
+        $("#changeType").click(function () {
+            var so = typeTree.treeview('getSelected');
+            debugger;
+            if (so == null || so.length <= 0) {
+                window.houoy.public.alert('#treeAlertArea', "请选择一个类型")
+            } else {
+                cms.model.getCurrentData().select_node = so[0];
+                $("#pk_type").val(so[0].text);
+                $('#typeModal').modal("hide");
+            }
+        });
+
+        //搜索
+        $('#treeSearchInt').bind('input propertychange', function () {
+            typeTree.treeview('search', [$(this).val(), {
+                ignoreCase: true,     // case insensitive
+                exactMatch: false,    // like or equals
+                revealResults: true // reveal matching nodes
+            }]);
+        });
+
+        loadTree();
+    };
+
+
+    cms.initTree(function(){
+        cms.init();
+    });
+
 })(window.houoy.cms || {});
 
 
