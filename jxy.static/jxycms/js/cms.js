@@ -15,6 +15,8 @@
         essay_content: $("#essay_content").val(),
         ts_start: $("#ts_start").val(),
         ts_end: $("#ts_end").val(),
+        is_publish: 0,
+        tree_data:[],
         select_node:{}
     });
 
@@ -25,12 +27,15 @@
         cms.model.getCurrentData().essay_content = data.essay_content;
         cms.model.getCurrentData().ts_start = data.ts_start;
         cms.model.getCurrentData().ts_end = data.ts_end;
-        cms.model.getCurrentData().select_node = data.select_node;
+        cms.model.getCurrentData().pk_type = data.pk_type;
+        cms.model.getCurrentData().is_publish = data.is_publish;
+        cms.model.getCurrentData().select_node = cms.initTree.getSelectedByField("pk_type",data.pk_type);
+
         $("#essay_name").val(cms.model.getCurrentData().essay_name);
         $("#essay_subname").val(cms.model.getCurrentData().essay_subname);
         $("#ts_start").val(cms.model.getCurrentData().ts_start);
         $("#ts_end").val(cms.model.getCurrentData().ts_end);
-        $("#pk_type").val(cms.model.getCurrentData().select_node.pk_type);
+        $("#pk_type").val(cms.model.getCurrentData().select_node.text);
 
         cms.contentSet('<p>用 JS 设置的内容</p>');
         cms.contentSet(cms.model.getCurrentData().essay_content);
@@ -38,6 +43,7 @@
 
     cms.initWangEditor = function () {
         //加载编辑器的容器
+        debugger;
         if (!cms.um) {
             cms.um = new window.wangEditor('container');
             cms.um.create();
@@ -61,11 +67,14 @@
             cms.initWangEditor();
             cms.resetCurrentData({//新增时候当前缓存数据是空
                 pk_essay: null,
-                essay_name: null,
-                essay_subname: null,
-                essay_content: null,
+                essay_name: "",
+                essay_subname: "",
+                essay_content: "",
                 ts_start:null,
                 ts_end:null,
+                pk_type:0,
+                is_publish:0,
+                tree_data:[],
                 select_node:{}
             });
         });
@@ -95,17 +104,29 @@
             });
         });
 
+        $("#publishBtn").click(function () {
+            if (confirm('你确定要发布吗？')) {
+                cms.resetCurrentData(cms.dataTable.getSelectedRows()[0]);//设置当前选中的行
+                cms.model.getCurrentData().is_publish = 1;
+                cms.save(function () {
+                    cms.model.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
+                    cms.refresh();
+                }, function () {
+                });
+            }
+        });
+
         $("#cancelBtn").click(function () {
             cms.model.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
-            cms.resetCurrentData({//新增时候当前缓存数据是空
-                pk_essay: null,
-                essay_name: null,
-                essay_subname: null,
-                essay_content: null,
-                ts_start:null,
-                ts_end:null,
-                select_node:{}
-            });
+            //cms.resetCurrentData({//新增时候当前缓存数据是空
+            //    pk_essay: null,
+            //    essay_name: null,
+            //    essay_subname: null,
+            //    essay_content: null,
+            //    ts_start:null,
+            //    ts_end:null,
+            //    select_node:{}
+            //});
         });
 
         $("#toCardBtn").click(function () {
@@ -131,7 +152,7 @@
             cms.refresh();
         });
 
-        $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii'});
+        $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii:ss'});
 
         //初始化
         cms.model.setUIState(window.houoy.public.PageManage.UIState.SEARCH);//默认是查询状态
@@ -150,11 +171,13 @@
                 }
             },
             columns: [{"title": "序列号", 'data': 'pk_essay', "visible": false},
+                {"title": "文章编码", 'data': 'essay_code', "visible": false},
                 {"title": "标题", 'data': 'essay_name'},
                 {"title": "副标题", 'data': 'essay_subname'},
                 {"title": "开始时间", 'data': 'ts_start'},
                 {"title": "结束时间", 'data': 'ts_end'},
-                {"title": "类型", 'data': 'pk_type'}
+                {"title": "类型", 'data': 'pk_type'},
+                {"title": "发布", 'data': 'is_publish', "visible": false}
             ],
             onSelectChange: function (selectedNum, selectedRows) {
                 if (selectedNum > 1) {
@@ -226,29 +249,12 @@
     cms.initTree = function (onSuccess) {
         var typeTree = null;
 
-        //获得节点的当前路径
-        function getPath(cn) {
-            function stepAdd(currentNode) {
-                var parentNode = $('#tree').treeview('getParent', currentNode.nodeId);
-                if (parentNode.hasOwnProperty("nodeId")) {
-                    nodePath = parentNode.text + "/" + nodePath;
-                    if (parentNode.hasOwnProperty("parentId")) {
-                        stepAdd(parentNode);
-                    }
-                }
-            }
-
-            var nodePath = cn.text;
-            stepAdd(cn);
-            return nodePath;
-        }
-
         function loadTree() {
             window.houoy.public.post(urlTree + '/essaytype/retrieve', null, function (data) {
                 if (data.success) {
-                    var treeData = data.resultData.nodes;
+                    cms.model.getCurrentData().tree_data = data.resultData;
                     typeTree = $('#tree').treeview({
-                        data: treeData
+                        data: cms.model.getCurrentData().tree_data.nodes
                     });
                     onSuccess();
                 } else {
@@ -262,7 +268,6 @@
         //改变选中项
         $("#changeType").click(function () {
             var so = typeTree.treeview('getSelected');
-            debugger;
             if (so == null || so.length <= 0) {
                 window.houoy.public.alert('#treeAlertArea', "请选择一个类型")
             } else {
@@ -281,9 +286,29 @@
             }]);
         });
 
+
         loadTree();
     };
 
+    //根据属性获得对应的节点
+    cms.initTree.getSelectedByField=function(field , value){
+        var rs = [];
+        function inget(currentNode){
+            if(currentNode[field] == value){
+                rs.push(currentNode);
+            }
+
+            var cs = currentNode.nodes;
+            if(cs){
+                for(var i=0;i<cs.length;i++){
+                    inget(cs[i]);
+                }
+            }
+        }
+
+        inget(cms.model.getCurrentData().tree_data);
+        return rs;
+    };
 
     cms.initTree(function(){
         cms.init();
