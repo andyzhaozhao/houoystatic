@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>images</title>
+</head>
+<body>
+<table class="table ">
+    <tr>
+        <td class="modalList">
+            <div class="row well well-sm">
+                <div class="btn-group">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            操作目录
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" id="treeAddNextBtn">增加同级目录</a></li>
+                            <li><a href="#" id="treeAddChildBtn">增加子目录</a></li>
+                            <li><a href="#" id="treeEditBtn">编辑当前目录</a></li>
+                            <li><a href="#" id="treeDeleteBtn">删除选中目录</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <input type="text" class="form-control" placeholder="Search" id="treeSearchInt">
+                </div>
+            </div>
+            <div class="row" id="treeAlertArea">
+
+            </div>
+            <div class="row">
+                <div id="tree">
+
+                </div>
+            </div>
+        </td>
+        <td></td>
+        <td>
+            <div class="row well well-sm">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default pageStateSearch" id="toAddBtn">增加</button>
+                    <button type="button" class="btn btn-default pageStateSearch pageStateOneSelected" id="toEditBtn">修改
+                    </button>
+                    <button type="button" class="btn btn-default pageStateSearch pageStateMulSelected" id="deleteBtn">
+                        删除
+                    </button>
+                    <button type="button" class="btn btn-default pageStateCreate pageStateUpdate" id="saveBtn">保存
+                    </button>
+                    <button type="button" class="btn btn-default pageStateCreate pageStateUpdate" id="cancelBtn">取消
+                    </button>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default modalCard pageStateSearch" id="toListBtn">列表视图</button>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default modalList pageStateOneSelected" id="toCardBtn">卡片视图
+                    </button>
+                </div>
+            </div>
+            <div class="row well well-sm modalList">
+                <div class="form-inline">
+                    <div class="form-group">
+                        <label>视频编码</label>
+                        <input type="text" class="form-control" name="image_code">
+                    </div>
+                    <div class="form-group">
+                        <label>视频名称</label>
+                        <input type="text" class="form-control" name="image_name">
+                    </div>
+                    <button class="btn btn-default" id="searchBtn">查询</button>
+                    <button class="btn btn-default" id="searchResetBtn">重置</button>
+                </div>
+            </div>
+            <!--列表视图-->
+            <div class="row panel panel-default modalList">
+                <div class="panel-body">
+                    <table id="table">
+                    </table>
+                </div>
+            </div>
+            <!--卡片视图-->
+            <div class="row panel panel-default modalCard">
+                <div class="panel-body">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label for="image_code" class="col-sm-2 col- control-label">视频编码</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control pageStateCreate pageStateUpdate" id="image_code"
+                                       placeholder="标题">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="image_name" class="col-sm-2 control-label">视频名称</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control pageStateCreate pageStateUpdate" id="image_name"
+                                       placeholder="副标题">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="image_name" class="col-sm-2 control-label">视频上传</label>
+                            <div class="col-sm-10">
+                                <img id="imageshow" style="max-width: 600px;">
+                                <label id="imageshowpath">视频路径</label>
+                                <input type="file" name="file" class="form-control pageStateCreate pageStateUpdate" id="imageFile"
+                                       placeholder="视频上传">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<!-- 新增 编辑 模态框（Modal） -->
+<div class="modal fade" id="treeAddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">新增目录</h4>
+            </div>
+            <div class="modal-body">
+                <div class="panel-body">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label for="foldeNameIpt" class="col-sm-2 control-label">目录名称</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control"
+                                       id="foldeNameIpt"
+                                       placeholder="输入名称">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="treeSaveBtn">提交更改</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<!-- 删除 模态框（Modal） -->
+<div class="modal fade" id="treeDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">您确定要删除目录<span id="deleteFolderSpan"></span>?</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="treeDeleteSureBtn">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<script type="text/javascript" src="jxycms/js/video.js"></script>
+</body>
+</html>
+
+
+
+
+
