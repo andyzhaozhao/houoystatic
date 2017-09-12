@@ -5,7 +5,7 @@
 (function (place) {
     //定义页面数据模型
     //var url = "http://localhost:8888/api";
-    var url = window.houoy.public.static.cmsContextPath+"/api" ;
+    var url = window.houoy.public.static.contextPath+"/api" ;
 
     place.model = (function () {
         if (!place.model) {
@@ -45,6 +45,7 @@
         function loadTree() {
             window.houoy.public.post(url + '/place/retrieve', null, function (data) {
                 if (data.success) {
+                    debugger;
                     var treeData = data.resultData.nodes;
                     typeTree = $('#tree').treeview({
                         data: treeData,
@@ -82,8 +83,8 @@
             if (so == null || so.length <= 0) {
                 window.houoy.public.alert('#treeAlertArea', "请选择一个目录")
             } else {
-                deleteSpan.text(so[0].type_name);
-                deleteSpan.prop("pk_type", so[0].pk_type);
+                deleteSpan.text(so[0].place_name);
+                deleteSpan.prop("pk_place", so[0].pk_place);
                 $('#treeDeleteModal').modal();
             }
         });
@@ -94,37 +95,37 @@
             if (so == null || so.length <= 0) {
                 window.houoy.public.alert('#treeAlertArea', "请选择一个目录")
             } else {
-                var typeCode = null;
+                var placeCode = null;
                 var pkParent = null;
 
                 switch (type) {
                     case "child":
-                        pkParent = so[0].pk_type;
+                        pkParent = so[0].pk_place;
                         if (so[0].nodes) {//如果有子节点
-                            typeCode = so[0].type_code + ((1000 + so[0].nodes.length + 1) + "").substr(1);//获得新节点的typeCode
+                            placeCode = so[0].place_code + ((1000 + so[0].nodes.length + 1) + "").substr(1);//获得新节点的placeCode
                         } else {
-                            typeCode = so[0].type_code + "001";//获得新节点的typeCode
+                            placeCode = so[0].place_code + "001";//获得新节点的placeCode
                         }
                         break;
                     case "sibing":
                         if (so[0].parentId == null || so[0].parentId == undefined) {//如果是一级节点
                             var siblingLength = typeTree.treeview('getSiblings', so[0]).length;
-                            typeCode = ((1000000 + siblingLength + 2) + "").substr(1);//获得新节点的typeCode
+                            placeCode = ((1000000 + siblingLength + 2) + "").substr(1);//获得新节点的placeCode
                             pkParent = "1";
                         } else {//如果存在，说明当前选中的不是一级节点
                             var parentNode = typeTree.treeview('getNode', so[0].parentId);
-                            var n = ((1000 + parentNode.nodes.length + 1) + "").substr(1);//获得新节点的typeCode
-                            typeCode = parentNode.type_code + n;
-                            pkParent = parentNode.pk_type;
+                            var n = ((1000 + parentNode.nodes.length + 1) + "").substr(1);//获得新节点的placeCode
+                            placeCode = parentNode.place_code + n;
+                            pkParent = parentNode.pk_place;
                         }
                         break;
                     default:
                         break;
                 }
 
-                nameIpt.prop("typeCode", typeCode);
+                nameIpt.prop("placeCode", placeCode);
                 nameIpt.prop("pkParent", pkParent);
-                nameIpt.prop("pk_type", null);
+                nameIpt.prop("pk_place", null);
                 $('#treeAddModal').modal();
             }
         }
@@ -135,10 +136,10 @@
             if (so == null || so.length <= 0) {
                 window.houoy.public.alert('#treeAlertArea', "请选择一个目录")
             } else {
-                nameIpt.prop("typeCode", so[0].type_code);
+                nameIpt.prop("placeCode", so[0].place_code);
                 nameIpt.prop("pkParent", so[0].pk_parent);
-                nameIpt.prop("pk_type", so[0].pk_type);
-                nameIpt.val(so[0].type_name);
+                nameIpt.prop("pk_place", so[0].pk_place);
+                nameIpt.val(so[0].place_name);
                 $('#treeAddModal').modal();
             }
         }
@@ -146,10 +147,10 @@
         //保存节点
         $("#treeSaveBtn").click(function () {
             var paramData = {
-                pk_type: nameIpt.prop("pk_type"),
+                pk_place: nameIpt.prop("pk_place"),
                 pk_parent: nameIpt.prop("pkParent"),
-                type_code: nameIpt.prop("typeCode"),
-                type_name: nameIpt.val()
+                place_code: nameIpt.prop("placeCode"),
+                place_name: nameIpt.val()
             };
 
             window.houoy.public.post(url + '/place/save', JSON.stringify(paramData), function (data) {
@@ -168,7 +169,7 @@
 
         //删除
         $("#treeDeleteSureBtn").click(function () {
-            var paramData = [deleteSpan.prop("pk_type")];
+            var paramData = [deleteSpan.prop("pk_place")];
 
             var paramDD = "";
             window.houoy.public.post(url + '/place/delete', JSON.stringify(paramData), function (data) {
