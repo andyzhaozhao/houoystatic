@@ -149,25 +149,33 @@
                 url: _param.url,
                 param: _param.param,
                 columns: _param.columns,
-                onSelectChange: _param.onSelectChange
+                onSelectChange: _param.onSelectChange,
+                single: _param.single//是否单选模式
             };
 
             var columns = param.columns;
             //var columns = [{"title": "序列号", 'data': 'pk_role', "visible": false},
             //    {"title": "角色编码", 'data': 'role_code'},
             //    {"title": "角色名称", 'data': 'role_name'}];
-            var columnObject = [{
-                "title": "<label><input type='checkbox' name='allChecked' />All</label>",
-                'data': 'id',
-                'render': function (data, type, row, meta) {
-                    return '<label><input type="checkbox" value="' + data + '" name="id"/>' + meta.row + '</label>';
-                },
-                "orderable": false,
-                "width": "50px",
-                "sortable": false
-            }];
 
-            columnObject = columnObject.concat(columns);
+            var columnObject = [];
+            debugger;
+            if (!param.single) {
+                columnObject = [{
+                    "title": "<label><input type='checkbox' name='allChecked' />All</label>",
+                    'data': 'id',
+                    'render': function (data, type, row, meta) {
+                        return '<label><input type="checkbox" value="' + data + '" name="id"/>' + meta.row + '</label>';
+                    },
+                    "orderable": false,
+                    "width": "50px",
+                    "sortable": false
+                }];
+
+                columnObject = columnObject.concat(columns);
+            } else {
+                columnObject = columns;
+            }
 
             var thisTable = $("#" + param.dataTableID).dataTable({
                 //"dom": "<'row' <'col-md-12'B>><'row'<'col-md-6 col-sm-12'l><'col-md-6 col-sm-12'f>r>" +
@@ -237,67 +245,70 @@
                     "search": "搜索:"
                 },
                 initComplete: function () {
-                    //全选
-                    $('#' + param.dataTableID + ' input[name=allChecked]').click(function () {
-                        if (this.checked) {
-                            $('#' + param.dataTableID + ' tbody tr').each(function () {
-                                var thisinput = $(this).find("input").get(0);
-                                thisinput.checked = true;
-                                //$.uniform.update(thisinput);
-                                $(this).addClass('selected');
-                            });
-                        } else {
-                            $('#' + param.dataTableID + ' tbody tr').each(function () {
-                                var thisinput = $(this).find("input").get(0);
-                                thisinput.checked = false;
-                                //$.uniform.update(thisinput);
-                                $(this).removeClass('selected');
-                            });
-                        }
-
-                        onSelectChange(param);
-                    });
-
-                    $('#' + param.dataTableID + ' tbody').unbind('click').on('click', 'tr', function (event) {
-                        //更新当前选中行
-                        var thisinput = $(this).find("input").get(0);
-                        if ($(event.target).is(":checkbox") || $(event.target).is("label")) {
-                            //防止点解checkbox本省进行两次check和uncheck操作
-                            //alert($(event.target).is("label"));
-                        } else {
-                            if (thisinput.checked == true) {
-                                thisinput.checked = false;
+                    if (!param.single) {
+                        //全选
+                        $('#' + param.dataTableID + ' input[name=allChecked]').click(function () {
+                            if (this.checked) {
+                                $('#' + param.dataTableID + ' tbody tr').each(function () {
+                                    var thisinput = $(this).find("input").get(0);
+                                    thisinput.checked = true;
+                                    //$.uniform.update(thisinput);
+                                    $(this).addClass('selected');
+                                });
                             } else {
-                                thisinput.checked = true;
+                                $('#' + param.dataTableID + ' tbody tr').each(function () {
+                                    var thisinput = $(this).find("input").get(0);
+                                    thisinput.checked = false;
+                                    //$.uniform.update(thisinput);
+                                    $(this).removeClass('selected');
+                                });
                             }
-                            //$.uniform.update(thisinput);
-                        }
-                        //更新全选按钮
-                        var hasUncheck = false;
-                        $('#' + param.dataTableID + ' tbody tr').each(function () {
-                            var thisinput = $(this).find("input").get(0);
-                            if (thisinput.checked == false) {
-                                hasUncheck = true;
-                            }
+
+                            onSelectChange(param);
                         });
-                        var allChecked = $('#' + param.dataTableID + ' input[name=allChecked]').get(0);
-                        if (hasUncheck) {//存在没有选中的项目
-                            allChecked.checked = false;
-                            //$.uniform.update(allChecked);
-                        } else {
-                            allChecked.checked = true;
-                            //$.uniform.update(allChecked);
-                        }
 
-                        if (thisinput.checked == true) {
-                            $(this).addClass("selected"); // 追加样式
-                        } else {
-                            $(this).removeClass("selected");
-                        }
-                        //  $(this).toggleClass("selected");
+                        //选择某一行
+                        $('#' + param.dataTableID + ' tbody').unbind('click').on('click', 'tr', function (event) {
+                            //更新当前选中行
+                            var thisinput = $(this).find("input").get(0);
+                            if ($(event.target).is(":checkbox") || $(event.target).is("label")) {
+                                //防止点解checkbox本省进行两次check和uncheck操作
+                                //alert($(event.target).is("label"));
+                            } else {
+                                if (thisinput.checked == true) {
+                                    thisinput.checked = false;
+                                } else {
+                                    thisinput.checked = true;
+                                }
+                                //$.uniform.update(thisinput);
+                            }
+                            //更新全选按钮
+                            var hasUncheck = false;
+                            $('#' + param.dataTableID + ' tbody tr').each(function () {
+                                var thisinput = $(this).find("input").get(0);
+                                if (thisinput.checked == false) {
+                                    hasUncheck = true;
+                                }
+                            });
+                            var allChecked = $('#' + param.dataTableID + ' input[name=allChecked]').get(0);
+                            if (hasUncheck) {//存在没有选中的项目
+                                allChecked.checked = false;
+                                //$.uniform.update(allChecked);
+                            } else {
+                                allChecked.checked = true;
+                                //$.uniform.update(allChecked);
+                            }
 
-                        onSelectChange(param);
-                    });
+                            if (thisinput.checked == true) {
+                                $(this).addClass("selected"); // 追加样式
+                            } else {
+                                $(this).removeClass("selected");
+                            }
+                            //  $(this).toggleClass("selected");
+
+                            onSelectChange(param);
+                        });
+                    }
                 },
                 // set first column as a default sort by asc
                 "fnDrawCallback": function () {
@@ -336,7 +347,7 @@
 
     //定义全局变量
     if (typeof s.alert == "undefined") {
-        s.alert = function (id, msg,type) {
+        s.alert = function (id, msg, type) {
             var typeclass = "";
             switch (type) {
                 case "success":
@@ -369,7 +380,7 @@
 
     //post请求
     if (typeof s.post == "undefined") {
-        s.post = function (url, data,onSuccess,onError) {
+        s.post = function (url, data, onSuccess, onError) {
             $.ajax({
                 type: 'post',
                 url: url,
@@ -380,12 +391,12 @@
                 dataType: "json",
                 data: data,
                 success: function (data) {
-                    if(onSuccess){
+                    if (onSuccess) {
                         onSuccess(data);
                     }
                 },
                 error: function (err) {
-                    if(onError){
+                    if (onError) {
                         onError(err);
                     }
                 }
