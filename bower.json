@@ -33,6 +33,7 @@
     "bootstrap-table": "^1.11.1",
     "bootstrap-fileinput": "^4.3.9",
     "wangEditor": "^2.1.23",
-    "smalot-bootstrap-datetimepicker": "^2.4.4"
+    "smalot-bootstrap-datetimepicker": "^2.4.4",
+    "requirejs": "^2.3.4"
   }
 }

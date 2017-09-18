@@ -308,6 +308,16 @@
 
                             onSelectChange(param);
                         });
+                    } else {
+                        //选择某一行
+                        $('#' + param.dataTableID + ' tbody').unbind('click').on('click', 'tr', function (event) {
+                            $('#' + param.dataTableID + ' tbody tr').each(function () {
+                                $(this).removeClass("selected");
+                            });
+                            $(this).addClass("selected"); // 追加样式
+
+                            onSelectChange(param);
+                        });
                     }
                 },
                 // set first column as a default sort by asc

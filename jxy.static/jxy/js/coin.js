@@ -135,6 +135,26 @@
                 }
             }
         });
+
+        coin.dataTablesub = window.houoy.public.createDataTable({
+            dataTableID: "tablesub",
+            single:true,
+            url: window.houoy.public.static.contextPath + "/api/coinRecharge/retrieve",
+            param: {//查询参数
+
+            },
+            columns: [
+                {"title": "编码", 'data': 'recharge_code'},
+                {"title": "名称", 'data': 'recharge_name'},
+                {"title": "金额·", 'data': 'recharge_money'},
+                {"title": "积分", 'data': 'recharge_coin'},
+                {"title": "当前总积分", 'data': 'coin'},
+                {"title": "用户", 'data': 'pk_person'},
+                {"title": "时间", 'data': 'ts'}],
+            onSelectChange: function (selectedNum, selectedRows) {
+
+            }
+        });
     };
 
     coin.save = function (onSuccess, onError) {

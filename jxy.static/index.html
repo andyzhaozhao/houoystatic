@@ -91,7 +91,7 @@
                     <i class="glyphicon glyphicon-edit"></i>地点管理</a></li>
                 <li><a href="javascript:indexNavigate('jxy/coin.html')">
                     <i class="glyphicon glyphicon-edit"></i>充值管理</a></li>
-                <li><a href="#"><i class="glyphicon glyphicon-edit"></i>消费管理</a></li>
+                <!--<li><a href="#"><i class="glyphicon glyphicon-edit"></i>消费管理</a></li>-->
             </ul>
         </li>
         <li>
@@ -121,14 +121,14 @@
         <li>
             <a href="#relationpersonWithPro" class="nav-header collapsed" data-toggle="collapse">
                 <i class="glyphicon glyphicon-cog"></i>
-                产品与用户关系
+                内容使用记录
                 <span class="pull-right glyphicon glyphicon-chevron-down"></span>
             </a>
             <ul id="relationpersonWithPro" class="nav nav-list collapse">
-                <li><a href="javascript:indexNavigate('jxy/person.html')"><i
-                        class="glyphicon glyphicon-edit"></i>按用户查看</a></li>
-                <li><a href="javascript:indexNavigate('jxy/habbit.html')"><i
-                        class="glyphicon glyphicon-edit"></i>按产品查看</a></li>
+                <li><a href="javascript:indexNavigate('jxy/read_record.html')">
+                    <i class="glyphicon glyphicon-edit"></i>阅读记录</a></li>
+                <li><a href="javascript:indexNavigate('jxy/grade-record.html')">
+                    <i class="glyphicon glyphicon-edit"></i>评分记录</a></li>
             </ul>
         </li>
         <li>
@@ -140,20 +140,14 @@
             <ul id="im" class="nav nav-list collapse">
                 <li><a href="javascript:indexNavigate('jxy/person.html')"><i
                         class="glyphicon glyphicon-edit"></i>用户关注关系</a></li>
-                <li><a href="javascript:indexNavigate('jxy/habbit.html')"><i
-                        class="glyphicon glyphicon-edit"></i>用户已经邀请关系</a></li>
                 <li><a href="javascript:indexNavigate('../im/im.html')">
                     <i class="glyphicon glyphicon-user"></i>初始运动记录</a>
                 </li>
                 <li><a href="javascript:indexNavigate('../im/im.html')">
-                    <i class="glyphicon glyphicon-user"></i>在线交流</a>
-                </li>
-                <li><a href="javascript:indexNavigate('../im/imManage.html')">
-                    <i class="glyphicon glyphicon-asterisk"></i>社交管理</a>
+                    <i class="glyphicon glyphicon-user"></i>分享记录</a>
                 </li>
             </ul>
         </li>
-        <li><a href="#">其他</a></li>
     </ul>
     <div id="content" class="container col-md-10 col-lg-10 col-sm-9">
 
@@ -173,9 +167,9 @@
 <script type="text/javascript" src="js/public_static.js"></script>
 <script type="text/javascript" src="js/public.js"></script>
 <script type="text/javascript">
-    if (!window.houoy.public.static.getSessionID()) {
-        location.href = "login.html";
-    }
+//    if (!window.houoy.public.static.getSessionID()) {
+//        location.href = "login.html";
+//    }
 
     function indexNavigate(url) {
         $("#content").empty();
