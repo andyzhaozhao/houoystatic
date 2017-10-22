@@ -19,6 +19,7 @@
             video_code: $("#video_code").val(),
             video_name: $("#video_name").val(),
             video_desc: $("#video_desc").val(),
+            video_length: $("#video_length").val(),
             select_node_id: 0,//默认选中的树节点
             pk_folder: ""
         });
@@ -28,9 +29,11 @@
             video.model.getCurrentData().video_code = data.video_code;
             video.model.getCurrentData().video_name = data.video_name;
             video.model.getCurrentData().video_desc = data.video_desc;
+            video.model.getCurrentData().video_length = data.video_length;
             $("#video_code").val(video.model.getCurrentData().video_code);
             $("#video_name").val(video.model.getCurrentData().video_name);
             $("#video_desc").val(video.model.getCurrentData().video_desc);
+            $("#video_length").val(video.model.getCurrentData().video_length);
             $("#pk_video").val(video.model.getCurrentData().pk_video);
             video.upload.reset();
             $("#videoFile").val();
@@ -64,6 +67,9 @@
                     video_desc: function () {
                         return $("input[name='video_desc']").val();
                     },
+                    video_length: function () {
+                        return $("input[name='video_length']").val();
+                    },
                     pk_folder: function () {
                         return video.model.getCurrentData().pk_folder;
                     }
@@ -71,6 +77,7 @@
                 columns: [{"title": "pk", 'data': 'pk_video', "visible": false},
                     {"title": "视频编码", 'data': 'video_code'},
                     {"title": "视频名称", 'data': 'video_name'},
+                    {"title": "视频时长（秒）", 'data': 'video_length'},
                     {"title": "视频详细描述", 'data': 'video_desc'}],
                 onSelectChange: function (selectedNum, selectedRows) {
                     if (selectedNum > 1) {
@@ -98,7 +105,8 @@
             video.resetCurrentData({//新增时候当前缓存数据是空
                 video_code: null,
                 video_name: null,
-                video_desc: null
+                video_desc: null,
+                video_length: null
             });
         };
 
@@ -128,7 +136,7 @@
         };
 
         video.controller.saveRow = function () {
-            if (!($("#video_name").val()) || !($("#video_code").val()) || !($("#video_desc").val())) {
+            if (!($("#video_name").val()) || !($("#video_code").val()) || !($("#video_desc").val()|| !($("#video_length").val()))) {
                 alert("请填写完整信息");
             } else {
                 video.upload.upload("videoFile", video.model.getCurrentData().path, function (progress) {
@@ -138,6 +146,7 @@
                         video.model.getCurrentData().video_name = $("#video_name").val();
                         video.model.getCurrentData().video_code = $("#video_code").val();
                         video.model.getCurrentData().video_desc = $("#video_desc").val();
+                        video.model.getCurrentData().video_length = $("#video_length").val();
 
                         window.houoy.public.post(url + '/video/save', JSON.stringify(video.model.getCurrentData()), function (data) {
                             if (data.success) {
@@ -245,7 +254,8 @@
             video.resetCurrentData({//新增时候当前缓存数据是空
                 video_code: null,
                 video_name: null,
-                video_desc: null
+                video_desc: null,
+                video_length: null
             });
         };
 
@@ -259,6 +269,7 @@
             $("input[name='video_code']").val("");
             $("input[name='video_name']").val("");
             $("input[name='video_desc']").val("");
+            $("input[name='video_length']").val("");
             video.controller.search();
         };
 
