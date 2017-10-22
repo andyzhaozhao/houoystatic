@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>images</title>
+    <title>videos</title>
 </head>
 <body>
 <table class="table ">
@@ -63,11 +63,15 @@
                 <div class="form-inline">
                     <div class="form-group">
                         <label>视频编码</label>
-                        <input type="text" class="form-control" name="image_code">
+                        <input type="text" class="form-control" name="video_code">
                     </div>
                     <div class="form-group">
                         <label>视频名称</label>
-                        <input type="text" class="form-control" name="image_name">
+                        <input type="text" class="form-control" name="video_name">
+                    </div>
+                    <div class="form-group">
+                        <label>视频描述</label>
+                        <input type="text" class="form-control" name="video_desc">
                     </div>
                     <button class="btn btn-default" id="searchBtn">查询</button>
                     <button class="btn btn-default" id="searchResetBtn">重置</button>
@@ -85,25 +89,31 @@
                 <div class="panel-body">
                     <form class="form-horizontal" role="form">
                         <div class="form-group">
-                            <label for="image_code" class="col-sm-2 col- control-label">视频编码</label>
+                            <label for="video_code" class="col-sm-2 col- control-label">视频编码</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control pageStateCreate pageStateUpdate" id="image_code"
-                                       placeholder="标题">
+                                <input type="text" class="form-control pageStateCreate pageStateUpdate" id="video_code"
+                                       placeholder="视频编码">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="image_name" class="col-sm-2 control-label">视频名称</label>
+                            <label for="video_name" class="col-sm-2 control-label">视频名称</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control pageStateCreate pageStateUpdate" id="image_name"
-                                       placeholder="副标题">
+                                <input type="text" class="form-control pageStateCreate pageStateUpdate" id="video_name"
+                                       placeholder="视频名称">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="image_name" class="col-sm-2 control-label">视频上传</label>
+                            <label for="video_desc" class="col-sm-2 control-label">视频详细描述</label>
                             <div class="col-sm-10">
-                                <img id="imageshow" style="max-width: 600px;">
-                                <label id="imageshowpath">视频路径</label>
-                                <input type="file" name="file" class="form-control pageStateCreate pageStateUpdate" id="imageFile"
+                                <textarea class="form-control pageStateCreate pageStateUpdate" rows="10" id="video_desc"
+                                          placeholder="视频详细描述"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="video_name" class="col-sm-2 control-label">视频上传</label>
+                            <div class="col-sm-10">
+                                <label id="videoshowpath">视频路径</label> <span id="progress">上传进度<span></span></span>
+                                <input type="file" name="file" class="form-control pageStateCreate pageStateUpdate" id="videoFile"
                                        placeholder="视频上传">
                             </div>
                         </div>

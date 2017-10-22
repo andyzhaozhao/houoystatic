@@ -2,190 +2,204 @@
  * 角色管理
  * @author andyzhao
  */
-(function (image) {
+(function (video) {
     //定义页面数据模型
     //var url = "http://localhost:8888/api";
-    var url = window.houoy.public.static.cmsContextPath+"/api" ;
-    image.model = (function () {
-        if (!image.model) {
-            image.model = {};
+    var url = window.houoy.public.static.cmsContextPath + "/api";
+    video.upload = window.houoy.upload.uploadByStep();
+
+    video.model = (function () {
+        if (!video.model) {
+            video.model = {};
         }
 
-        image.model = window.houoy.public.createPageModel();
-        image.model.setCurrentData({
-            pk_image: null,
-            image_code: $("#image_code").val(),
-            image_name: $("#image_name").val(),
+        video.model = window.houoy.public.createPageModel();
+        video.model.setCurrentData({
+            pk_video: null,
+            video_code: $("#video_code").val(),
+            video_name: $("#video_name").val(),
+            video_desc: $("#video_desc").val(),
             select_node_id: 0,//默认选中的树节点
             pk_folder: ""
         });
 
-        image.resetCurrentData = function (data) {
-            image.model.getCurrentData().pk_image = data.pk_image;
-            image.model.getCurrentData().image_code = data.image_code;
-            image.model.getCurrentData().image_name = data.image_name;
-            $("#image_code").val(image.model.getCurrentData().image_code);
-            $("#image_name").val(image.model.getCurrentData().image_name);
-            $("#pk_image").val(image.model.getCurrentData().pk_image);
+        video.resetCurrentData = function (data) {
+            video.model.getCurrentData().pk_video = data.pk_video;
+            video.model.getCurrentData().video_code = data.video_code;
+            video.model.getCurrentData().video_name = data.video_name;
+            video.model.getCurrentData().video_desc = data.video_desc;
+            $("#video_code").val(video.model.getCurrentData().video_code);
+            $("#video_name").val(video.model.getCurrentData().video_name);
+            $("#video_desc").val(video.model.getCurrentData().video_desc);
+            $("#pk_video").val(video.model.getCurrentData().pk_video);
+            video.upload.reset();
+            $("#videoFile").val();
         };
 
-        return image.model;
+        return video.model;
     })();
 
-    image.view = (function () {
-        if (!image.view) {
-            image.view = {};
+    video.view = (function () {
+        if (!video.view) {
+            video.view = {};
         }
 
-        image.view.new = function () {
+        video.view.new = function () {
             //初始化模型
-            image.model.setUIState(window.houoy.public.PageManage.UIState.SEARCH);//默认是查询状态
-            image.model.setSelectState(window.houoy.public.PageManage.DataState.NONE_SELECT);//默认是没有选中数据
-            image.model.setModal(window.houoy.public.PageManage.UIModal.LIST);//默认是列表模式
+            video.model.setUIState(window.houoy.public.PageManage.UIState.SEARCH);//默认是查询状态
+            video.model.setSelectState(window.houoy.public.PageManage.DataState.NONE_SELECT);//默认是没有选中数据
+            video.model.setModal(window.houoy.public.PageManage.UIModal.LIST);//默认是列表模式
 
             //初始化表格
-            image.dataTable = window.houoy.public.createDataTable({
+            video.dataTable = window.houoy.public.createDataTable({
                 dataTableID: "table",
-                url: url + "/image/retrieve",
+                url: url + "/video/retrieve",
                 param: {//查询参数
-                    image_code: function () {
-                        return $("input[name='image_code']").val();
+                    video_code: function () {
+                        return $("input[name='video_code']").val();
                     },
-                    image_name: function () {
-                        return $("input[name='image_name']").val();
+                    video_name: function () {
+                        return $("input[name='video_name']").val();
+                    },
+                    video_desc: function () {
+                        return $("input[name='video_desc']").val();
                     },
                     pk_folder: function () {
-                        return image.model.getCurrentData().pk_folder;
+                        return video.model.getCurrentData().pk_folder;
                     }
                 },
-                columns: [{"title": "pk", 'data': 'pk_image', "visible": false},
-                    {"title": "视频编码", 'data': 'image_code'},
-                    {"title": "视频名称", 'data': 'image_name'}],
+                columns: [{"title": "pk", 'data': 'pk_video', "visible": false},
+                    {"title": "视频编码", 'data': 'video_code'},
+                    {"title": "视频名称", 'data': 'video_name'},
+                    {"title": "视频详细描述", 'data': 'video_desc'}],
                 onSelectChange: function (selectedNum, selectedRows) {
                     if (selectedNum > 1) {
-                        image.model.setSelectState(window.houoy.public.PageManage.DataState.MUL_SELECT);
+                        video.model.setSelectState(window.houoy.public.PageManage.DataState.MUL_SELECT);
                     } else if (selectedNum == 1) {
-                        image.model.setSelectState(window.houoy.public.PageManage.DataState.ONE_SELECT);
+                        video.model.setSelectState(window.houoy.public.PageManage.DataState.ONE_SELECT);
                     } else {
-                        image.model.setSelectState(window.houoy.public.PageManage.DataState.NONE_SELECT);//没有选中数据
+                        video.model.setSelectState(window.houoy.public.PageManage.DataState.NONE_SELECT);//没有选中数据
                     }
                 }
             });
         };
 
-        return image.view;
+        return video.view;
     }());
 
-    image.controller = (function () {
-        if (!image.controller) {
-            image.controller = {};
+    video.controller = (function () {
+        if (!video.controller) {
+            video.controller = {};
         }
 
-        image.controller.toAdd = function () {
-            image.model.setModal(window.houoy.public.PageManage.UIModal.CARD);
-            image.model.setUIState(window.houoy.public.PageManage.UIState.CREATE);
-            image.resetCurrentData({//新增时候当前缓存数据是空
-                image_code: null,
-                image_name: null
+        video.controller.toAdd = function () {
+            video.model.setModal(window.houoy.public.PageManage.UIModal.CARD);
+            video.model.setUIState(window.houoy.public.PageManage.UIState.CREATE);
+            video.resetCurrentData({//新增时候当前缓存数据是空
+                video_code: null,
+                video_name: null,
+                video_desc: null
             });
-            $("#imageshow").hide();
         };
 
-        image.controller.toEdit = function () {
-            image.model.setModal(window.houoy.public.PageManage.UIModal.CARD);
-            image.model.setUIState(window.houoy.public.PageManage.UIState.CREATE);
-            image.resetCurrentData(image.dataTable.getSelectedRows()[0]);//设置当前选中的行
-            var srcstr = "http://47.94.6.120/image/"+image.model.getCurrentData().path+
-                "/"+image.dataTable.getSelectedRows()[0].image_name;
+        video.controller.toEdit = function () {
+            video.model.setModal(window.houoy.public.PageManage.UIModal.CARD);
+            video.model.setUIState(window.houoy.public.PageManage.UIState.CREATE);
+            video.resetCurrentData(video.dataTable.getSelectedRows()[0]);//设置当前选中的行
+            var srcstr = "http://47.94.6.120/video/" + video.model.getCurrentData().path +
+                "/" + video.dataTable.getSelectedRows()[0].video_name;
             debugger;
-            $("#imageshow").attr("src",srcstr);
-            $("#imageshowpath").text(srcstr);
-            $("#imageshow").show();
+            $("#videoshowpath").text(srcstr);
         };
 
-        image.controller.toList = function () {
-            image.model.setModal(window.houoy.public.PageManage.UIModal.LIST);
-            image.model.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
-            image.model.setSelectState(window.houoy.public.PageManage.DataState.NONE_SELECT);
-            image.controller.search();
+        video.controller.toList = function () {
+            video.model.setModal(window.houoy.public.PageManage.UIModal.LIST);
+            video.model.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
+            video.model.setSelectState(window.houoy.public.PageManage.DataState.NONE_SELECT);
+            video.controller.search();
         };
 
-        image.controller.toCard = function () {
-            image.model.setModal(window.houoy.public.PageManage.UIModal.CARD);
-            image.resetCurrentData(image.dataTable.getSelectedRows()[0]);//设置当前选中的行
-            var srcstr = "http://47.94.6.120/image/"+image.model.getCurrentData().path+
-                "/"+image.dataTable.getSelectedRows()[0].image_name;
-            debugger;
-            $("#imageshow").attr("src",srcstr);
-            $("#imageshowpath").text(srcstr);
-            $("#imageshow").show();
+        video.controller.toCard = function () {
+            video.model.setModal(window.houoy.public.PageManage.UIModal.CARD);
+            video.resetCurrentData(video.dataTable.getSelectedRows()[0]);//设置当前选中的行
+            var srcstr = "http://47.94.6.120/video/" + video.model.getCurrentData().path +
+                "/" + video.dataTable.getSelectedRows()[0].video_name;
+            $("#videoshowpath").text(srcstr);
         };
 
-        image.controller.saveRow = function () {
-            if (!($("#image_name").val()) || !($("#image_code").val())) {
+        video.controller.saveRow = function () {
+            if (!($("#video_name").val()) || !($("#video_code").val()) || !($("#video_desc").val())) {
                 alert("请填写完整信息");
             } else {
+                video.upload.upload("videoFile", video.model.getCurrentData().path, function (progress) {
+                    $("#progress").show();
+                    $("#progress span").text(progress + "%");
+                    if (progress >= 100) {//传递完成
+                        video.model.getCurrentData().video_name = $("#video_name").val();
+                        video.model.getCurrentData().video_code = $("#video_code").val();
+                        video.model.getCurrentData().video_desc = $("#video_desc").val();
 
-                image.model.getCurrentData().image_name = $("#image_name").val();
-                image.model.getCurrentData().image_code = $("#image_code").val();
-
-                var formData = new FormData();
-                formData.append("file", $("#imageFile")[0].files[0]);
-                if(image.model.getCurrentData().pk_image){
-                    formData.append("pk_image", image.model.getCurrentData().pk_image);
-                }
-                formData.append("image_name", image.model.getCurrentData().image_name);
-                formData.append("image_code", image.model.getCurrentData().image_code);
-                formData.append("pk_folder", image.model.getCurrentData().pk_folder);
-                formData.append("path", image.model.getCurrentData().path);
-
-                $.ajax({
-                    url: url + '/image/save',
-                    type: 'POST',
-                    data: formData,
-                    cache: false, //上传文件不需要缓存。
-                    processData: false, // 告诉jQuery不要去处理发送的数据
-                    contentType: false,// 告诉jQuery不要去设置Content-Type请求头
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader("x-auth-token", window.houoy.public.static.getSessionID());  //使用spring session的token方式
-                    },
-                    success: function (data) {
-                        if (data.success) {
-                            alert("保存成功");
-                            image.model.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
-                        } else {
-                            alert("保存失败:" + data.msg);
-                        }
-                    },
-                    error: function (data) {
-                        alert("保存失败:" + data.msg);
+                        window.houoy.public.post(url + '/video/save', JSON.stringify(video.model.getCurrentData()), function (data) {
+                            if (data.success) {
+                                alert("保存成功");
+                                video.model.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
+                            } else {
+                                alert("保存失败:" + data.msg);
+                            }
+                        }, function (err) {
+                            alert("请求保存失败！" + err);
+                        });
                     }
                 });
+                //video.model.getCurrentData().video_name = $("#video_name").val();
+                //video.model.getCurrentData().video_code = $("#video_code").val();
+                //video.model.getCurrentData().video_desc = $("#video_desc").val();
 
+                /*var formData = new FormData();
+                 formData.append("file", $("#videoFile")[0].files[0]);
+                 if (video.model.getCurrentData().pk_video) {
+                 formData.append("pk_video", video.model.getCurrentData().pk_video);
+                 }
+                 formData.append("video_name", video.model.getCurrentData().video_name);
+                 formData.append("video_code", video.model.getCurrentData().video_code);
+                 formData.append("video_desc", video.model.getCurrentData().video_desc);
+                 formData.append("pk_folder", video.model.getCurrentData().pk_folder);
+                 formData.append("path", video.model.getCurrentData().path);
 
-                //
-                //window.houoy.public.post(url + '/image/save', JSON.stringify(image.model.getCurrentData()), function (data) {
-                //    if (data.success) {
-                //        alert("保存成功");
-                //        image.model.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
-                //    } else {
-                //        alert("保存失败:" + data.msg);
-                //    }
-                //}, function (err) {
-                //    alert("请求保存失败！" + err);
-                //});
+                 $.ajax({
+                 url: url + '/video/save',
+                 type: 'POST',
+                 data: formData,
+                 cache: false, //上传文件不需要缓存。
+                 processData: false, // 告诉jQuery不要去处理发送的数据
+                 contentType: false,// 告诉jQuery不要去设置Content-Type请求头
+                 beforeSend: function (xhr) {
+                 xhr.setRequestHeader("x-auth-token", window.houoy.public.static.getSessionID());  //使用spring session的token方式
+                 },
+                 success: function (data) {
+                 if (data.success) {
+                 alert("保存成功");
+                 video.model.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
+                 } else {
+                 alert("保存失败:" + data.msg);
+                 }
+                 },
+                 error: function (data) {
+                 alert("保存失败:" + data.msg);
+                 }
+                 });*/
             }
         };
 
-        image.controller.deleteRow = function () {
+        video.controller.deleteRow = function () {
             if (confirm('你确定要删除选择项目吗？')) {
                 var _ids = [];
-                switch (image.model.getModal()) {
+                switch (video.model.getModal()) {
                     case window.houoy.public.PageManage.UIModal.CARD:
-                        _ids[0] = image.model.getCurrentData().id;
+                        _ids[0] = video.model.getCurrentData().id;
                         break;
                     case window.houoy.public.PageManage.UIModal.LIST:
-                        $.each(image.dataTable.getSelectedRows(), function (index, value) {
+                        $.each(video.dataTable.getSelectedRows(), function (index, value) {
                             _ids[index] = value.id;
                         });
                         break;
@@ -193,10 +207,10 @@
                         break;
                 }
 
-                window.houoy.public.post(url + '/image/delete', JSON.stringify(_ids), function (data) {
+                window.houoy.public.post(url + '/video/delete', JSON.stringify(_ids), function (data) {
                     if (data.success) {
-                        image.model.setModal(window.houoy.public.PageManage.UIModal.LIST);
-                        image.controller.search();
+                        video.model.setModal(window.houoy.public.PageManage.UIModal.LIST);
+                        video.controller.search();
                     } else {
                         alert("删除失败:" + data);
                     }
@@ -206,14 +220,14 @@
 
                 //$.ajax({
                 //    type: 'delete',
-                //    url: url + '/image/delete',
+                //    url: url + '/video/delete',
                 //    contentType: "application/json;charset=UTF-8",
                 //    dataType: "json",
                 //    data: JSON.stringify(_ids),
                 //    success: function (data) {
                 //        if (data.success) {
-                //            image.model.setModal(window.houoy.public.PageManage.UIModal.LIST);
-                //            image.refresh();
+                //            video.model.setModal(window.houoy.public.PageManage.UIModal.LIST);
+                //            video.refresh();
                 //        } else {
                 //            alert("删除失败:" + data);
                 //        }
@@ -226,30 +240,32 @@
         };
 
         //取消所有行操作
-        image.controller.cancelRow = function () {
-            image.model.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
-            image.resetCurrentData({//新增时候当前缓存数据是空
-                image_code: null,
-                image_name: null
+        video.controller.cancelRow = function () {
+            video.model.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
+            video.resetCurrentData({//新增时候当前缓存数据是空
+                video_code: null,
+                video_name: null,
+                video_desc: null
             });
         };
 
         //刷新表格数据
-        image.controller.search = function () {
-            image.dataTable.refresh();
+        video.controller.search = function () {
+            video.dataTable.refresh();
         };
 
         //搜索区reset
-        image.controller.searchReset = function () {
-            $("input[name='image_code']").val("");
-            $("input[name='image_name']").val("");
-            image.controller.search();
+        video.controller.searchReset = function () {
+            $("input[name='video_code']").val("");
+            $("input[name='video_name']").val("");
+            $("input[name='video_desc']").val("");
+            video.controller.search();
         };
 
-        return image.controller;
+        return video.controller;
     }());
 
-    image.initTree = function (onSuccess) {
+    video.initTree = function (onSuccess) {
         var folderTree = null;
         var foldeNameIpt = $("#foldeNameIpt");
         var deleteFolderSpan = $("#deleteFolderSpan");
@@ -272,21 +288,21 @@
         }
 
         function loadTree() {
-            window.houoy.public.post(url + '/folder/retrieve', null, function (data) {
+            window.houoy.public.post(url + '/folderVideo/retrieve', null, function (data) {
                 if (data.success) {
                     var treeData = data.resultData.nodes;
                     folderTree = $('#tree').treeview({
                         data: treeData,
                         onNodeSelected: function (event, data) {
-                            image.model.getCurrentData().select_node_id = data.nodeId;
-                            image.model.getCurrentData().pk_folder = data.pk_folder;
-                            image.model.getCurrentData().path = getPath(data);
+                            video.model.getCurrentData().select_node_id = data.nodeId;
+                            video.model.getCurrentData().pk_folder = data.pk_folder;
+                            video.model.getCurrentData().path = getPath(data);
                             //刷新列表区
-                            image.controller.search();
+                            video.controller.search();
                         }
                     });
 
-                    folderTree.treeview('selectNode', [image.model.getCurrentData().select_node_id, {silent: false}]);
+                    folderTree.treeview('selectNode', [video.model.getCurrentData().select_node_id, {silent: false}]);
                 } else {
                     alert("获取tree失败:" + data.msg);
                 }
@@ -386,9 +402,9 @@
                 folder_name: foldeNameIpt.val()
             };
 
-            window.houoy.public.post(url + '/folder/save', JSON.stringify(paramData), function (data) {
+            window.houoy.public.post(url + '/folderVideo/save', JSON.stringify(paramData), function (data) {
                 if (data.success) {
-                    image.model.getCurrentData().select_node_id = folderTree.treeview('getSelected')[0].nodeId;
+                    video.model.getCurrentData().select_node_id = folderTree.treeview('getSelected')[0].nodeId;
                     loadTree();
                 } else {
                     alert("增加失败:" + data.msg);
@@ -405,9 +421,9 @@
             var paramData = [deleteFolderSpan.prop("pk_folder")];
 
             var paramDD = "";
-            window.houoy.public.post(url + '/folder/delete', JSON.stringify(paramData), function (data) {
+            window.houoy.public.post(url + '/folderVideo/delete', JSON.stringify(paramData), function (data) {
                 if (data.success) {
-                    image.model.getCurrentData().select_node_id = 0;
+                    video.model.getCurrentData().select_node_id = 0;
                     loadTree();
                 } else {
                     alert("删除失败:" + data.msg);
@@ -418,9 +434,9 @@
                 $('#treeDeleteModal').modal("hide");
             });
 
-            //window.houoy.public.post(url + '/folder/delete', JSON.stringify(paramData), function (data) {
+            //window.houoy.public.post(url + '/folderVideo/delete', JSON.stringify(paramData), function (data) {
             //    if (data.success) {
-            //        image.model.getCurrentData().select_node_id = 0 ;
+            //        video.model.getCurrentData().select_node_id = 0 ;
             //        loadTree();
             //    } else {
             //        alert("删除失败:" + data.msg);
@@ -444,30 +460,29 @@
         loadTree();
     };
 
-    image.registerEvent = function () {
+    video.registerEvent = function () {
         //注册事件监听
-        $("#toAddBtn").click(image.controller.toAdd);
-        $("#toEditBtn").click(image.controller.toEdit);
-        $("#toCardBtn").click(image.controller.toCard);
-        $("#toListBtn").click(image.controller.toList);
-        $("#deleteBtn").click(image.controller.deleteRow);
-        $("#saveBtn").click(image.controller.saveRow);
-        $("#cancelBtn").click(image.controller.cancelRow);
-        $("#searchBtn").click(image.controller.search);
-        $("#searchResetBtn").click(image.controller.searchReset);
-        $('#imageFile').change(function(){
+        $("#toAddBtn").click(video.controller.toAdd);
+        $("#toEditBtn").click(video.controller.toEdit);
+        $("#toCardBtn").click(video.controller.toCard);
+        $("#toListBtn").click(video.controller.toList);
+        $("#deleteBtn").click(video.controller.deleteRow);
+        $("#saveBtn").click(video.controller.saveRow);
+        $("#cancelBtn").click(video.controller.cancelRow);
+        $("#searchBtn").click(video.controller.search);
+        $("#searchResetBtn").click(video.controller.searchReset);
+        $('#videoFile').change(function () {
             var str = $(this).val();
-            var arr=str.split('\\');//注split可以用字符或字符串分割
-            var my=arr[arr.length-1];//这就是要取得的视频名称
-            $('#image_name').val(my);
-            debugger;
+            var arr = str.split('\\');//注split可以用字符或字符串分割
+            var my = arr[arr.length - 1];//这就是要取得的视频名称
+            $('#video_name').val(my);
         })
     };
 
-    image.view.new();
-    image.initTree();
-    image.registerEvent();
+    video.view.new();
+    video.initTree();
+    video.registerEvent();
 
-})(window.houoy.image || {});
+})(window.houoy.video || {});
 
 

@@ -1,5 +1,5 @@
 /**
- * 家校易全局
+ *
  * @author andyzhao
  */
 (function pub(houoy) {
@@ -159,7 +159,6 @@
             //    {"title": "角色名称", 'data': 'role_name'}];
 
             var columnObject = [];
-            debugger;
             if (!param.single) {
                 columnObject = [{
                     "title": "<label><input type='checkbox' name='allChecked' />All</label>",
