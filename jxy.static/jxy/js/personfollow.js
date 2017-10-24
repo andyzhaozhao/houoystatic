@@ -10,20 +10,7 @@
         }
 
         personfollow.model = window.houoy.public.createPageModel();
-        personfollow.model.setCurrentData({
-            pk_relfp: null,
-            pk_person: $("#pk_person").val(),
-            follow_pk_person: $("#follow_pk_person").val(),
-        });
 
-        personfollow.resetCurrentData = function (data) {
-            personfollow.model.getCurrentData().pk_relfp = data.pk_relfp;
-            personfollow.model.getCurrentData().pk_person = data.pk_person;
-            personfollow.model.getCurrentData().follow_pk_person = data.follow_pk_person;
-            $("#pk_person").val(personfollow.model.getCurrentData().pk_person);
-            $("#follow_pk_person").val(personfollow.model.getCurrentData().follow_pk_person);
-            $("#pk_relfp").val(personfollow.model.getCurrentData().pk_relfp);
-        };
 
         return personfollow.model;
     })();
@@ -46,16 +33,18 @@
                 url: url + "/personFollow/retrieve",
                 urlType: "get",
                 param: {//查询参数
-                    pk_person: function () {
-                        return $("#pk_person").val();
+                    person_name: function () {
+                        return $("#person_name").val();
                     },
-                    follow_pk_person: function () {
-                        return $("#follow_pk_person").val();
+                    follow_person_name: function () {
+                        return $("#follow_person_name").val();
                     }
                 },
                 columns: [{"title": "pk", 'data': 'pk_relfp', "visible": false},
                     {"title": "用户主键", 'data': 'pk_person'},
-                    {"title": "被关注用户主键", 'data': 'follow_pk_person'}],
+                    {"title": "被关注用户主键", 'data': 'follow_pk_person'},
+                    {"title": "用户名称", 'data': 'person_name'},
+                    {"title": "被关注用户名称", 'data': 'follow_person_name'}],
                 onSelectChange: function (selectedNum, selectedRows) {
                     if (selectedNum > 1) {
                         personfollow.model.setSelectState(window.houoy.public.PageManage.DataState.MUL_SELECT);
@@ -83,8 +72,8 @@
 
         //搜索区reset
         personfollow.controller.searchReset = function () {
-            $("#pk_person").val("");
-            $("#follow_pk_person").val("");
+            $("#person_name").val("");
+            $("#follow_person_name").val("");
             personfollow.controller.search();
         };
 
