@@ -43,7 +43,7 @@
         }
 
         function loadTree() {
-            window.houoy.public.post(url + '/place/retrieve', null, function (data) {
+            window.houoy.public.get(url + '/place/retrieve', null, function (data) {
                 if (data.success) {
                     debugger;
                     var treeData = data.resultData.nodes;
