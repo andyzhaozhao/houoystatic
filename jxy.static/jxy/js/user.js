@@ -273,7 +273,7 @@
         user.dataTable = window.houoy.public.createDataTable({
             dataTableID: "table",
             url:  window.houoy.public.static.contextPath  + "/root/base/user/retrieve",
-            urlPort: "get",
+            urlType: "get",
             param: {//查询参数
                 user_code: function(){return $("input[name='user_code']").val()},
                 user_name: function(){return $("input[name='user_name']").val()},

@@ -147,7 +147,7 @@
             var param = {
                 dataTableID: _param.dataTableID,
                 url: _param.url,
-                urlPort: _param.urlPort,
+                urlType: _param.urlType,
                 param: _param.param,
                 columns: _param.columns,
                 onSelectChange: _param.onSelectChange,
@@ -188,7 +188,7 @@
                 "processing": true,
                 "ajax": {
                     "url": param.url,
-                    type: param.urlPort ? param.urlPort : 'post',//post跨域请求
+                    type: param.urlType ? param.urlType : 'post',//post跨域请求
                     beforeSend: function (xhr) {
                         xhr.setRequestHeader("x-auth-token", window.houoy.public.static.getSessionID());  //使用spring session的token方式
                     },

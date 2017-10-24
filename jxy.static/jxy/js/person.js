@@ -132,6 +132,7 @@
         person.dataTable = window.houoy.public.createDataTable({
             dataTableID: "table",
             url: window.houoy.public.static.contextPath + "/api/person/retrieve",
+            urlType: "get",
             param: {//查询参数
                 person_code: function () {
                     return $("input[name='person_code']").val()

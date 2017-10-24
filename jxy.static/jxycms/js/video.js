@@ -57,6 +57,7 @@
             video.dataTable = window.houoy.public.createDataTable({
                 dataTableID: "table",
                 url: url + "/video/retrieve",
+                urlType: "get",
                 param: {//查询参数
                     video_code: function () {
                         return $("input[name='video_code']").val();
