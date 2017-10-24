@@ -147,6 +147,7 @@
             var param = {
                 dataTableID: _param.dataTableID,
                 url: _param.url,
+                urlPort: _param.urlPort,
                 param: _param.param,
                 columns: _param.columns,
                 onSelectChange: _param.onSelectChange,
@@ -187,7 +188,7 @@
                 "processing": true,
                 "ajax": {
                     "url": param.url,
-                    type: 'post',//post跨域请求
+                    type: param.urlPort ? param.urlPort : 'post',//post跨域请求
                     beforeSend: function (xhr) {
                         xhr.setRequestHeader("x-auth-token", window.houoy.public.static.getSessionID());  //使用spring session的token方式
                     },
@@ -392,6 +393,29 @@
         s.post = function (url, data, onSuccess, onError) {
             $.ajax({
                 type: 'post',
+                url: url,
+                contentType: "application/json;charset=UTF-8",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("x-auth-token", window.houoy.public.static.getSessionID());  //使用spring session的token方式
+                },
+                dataType: "json",
+                data: data,
+                success: function (data) {
+                    if (onSuccess) {
+                        onSuccess(data);
+                    }
+                },
+                error: function (err) {
+                    if (onError) {
+                        onError(err);
+                    }
+                }
+            });
+        };
+
+        s.get = function (url, data, onSuccess, onError) {
+            $.ajax({
+                type: 'get',
                 url: url,
                 contentType: "application/json;charset=UTF-8",
                 beforeSend: function (xhr) {
