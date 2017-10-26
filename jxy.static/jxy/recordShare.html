@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>分享记录</title>
+</head>
+<body>
+<div class="row well well-sm">
+    <div class="btn-group">
+
+    </div>
+</div>
+<div class="row well well-sm modalList">
+    <div class="form-inline">
+        <div class="form-group">
+            <label for="person_name">用户名称</label>
+            <input type="text" class="form-control" placeholder="用户名称" id="person_name">
+        </div>
+        <div class="form-group">
+            <label for="record_share_desc">分享内容</label>
+            <input type="text" class="form-control" placeholder="分享内容" id="record_share_desc">
+        </div>
+        <button class="btn btn-default" id="searchBtn">查询</button>
+        <button class="btn btn-default" id="searchResetBtn">重置</button>
+    </div>
+</div>
+<!--列表视图-->
+<div class="row panel panel-default modalList">
+    <div class="panel-body">
+        <table id="table">
+        </table>
+    </div>
+</div>
+<script src="jxy/js/recordShare.js" type="text/javascript"></script>
+</body>
+</html>
+
+
