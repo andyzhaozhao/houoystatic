@@ -103,6 +103,7 @@
         cmslist.dataTable = window.houoy.public.createDataTable({
             dataTableID: "table",
             url: url + "/retrieve",
+            urlType: "get",
             param: {//查询参数
                 essay_name: function () {
                     return $("input[name='essay_name']").val();

@@ -43,7 +43,7 @@
         }
 
         function loadTree() {
-            window.houoy.public.post(url + '/essaytype/retrieve', null, function (data) {
+            window.houoy.public.get(url + '/essaytype/retrieve', null, function (data) {
                 if (data.success) {
                     var treeData = data.resultData.nodes;
                     typeTree = $('#tree').treeview({

@@ -16,6 +16,8 @@
         ts_start: $("#ts_start").val(),
         ts_end: $("#ts_end").val(),
         is_publish: 0,
+        pk_person:$("#pk_person").val(),
+        person_name: $("#person_name").val(),
         tree_data:[],
         select_node:{}
     });
@@ -29,6 +31,8 @@
         cms.model.getCurrentData().ts_end = data.ts_end;
         cms.model.getCurrentData().pk_type = data.pk_type;
         cms.model.getCurrentData().is_publish = data.is_publish;
+        cms.model.getCurrentData().person_name = data.person_name;
+        cms.model.getCurrentData().pk_person = data.pk_person;
         cms.model.getCurrentData().select_node = cms.initTree.getSelectedByField("pk_type",data.pk_type);
 
         $("#essay_name").val(cms.model.getCurrentData().essay_name);
@@ -36,6 +40,8 @@
         $("#ts_start").val(cms.model.getCurrentData().ts_start);
         $("#ts_end").val(cms.model.getCurrentData().ts_end);
         $("#pk_type").val(cms.model.getCurrentData().select_node.text);
+        $("#pk_person").val(cms.model.getCurrentData().pk_person);
+        $("#person_name").val(cms.model.getCurrentData().person_name);
 
         cms.contentSet('<p>用 JS 设置的内容</p>');
         cms.contentSet(cms.model.getCurrentData().essay_content);
@@ -74,6 +80,8 @@
                 ts_end:null,
                 pk_type:0,
                 is_publish:0,
+                pk_person:"",
+                person_name:"",
                 tree_data:[],
                 select_node:{}
             });
@@ -149,6 +157,7 @@
         $("#searchResetBtn").click(function () {
             $("input[name='essay_name']").val("");
             $("input[name='essay_subname']").val("");
+            $("input[name='person_name']").val("");
             cms.refresh();
         });
 
@@ -162,12 +171,16 @@
         cms.dataTable = window.houoy.public.createDataTable({
             dataTableID: "table",
             url: url + "/retrieve",
+            urlType: "get",
             param: {//查询参数
                 essay_name: function () {
                     return $("input[name='essay_name']").val();
                 },
                 essay_subname: function () {
                     return $("input[name='essay_subname']").val();
+                },
+                person_name: function () {
+                    return $("input[name='person_name']").val();
                 }
             },
             columns: [{"title": "序列号", 'data': 'pk_essay', "visible": false},
@@ -177,6 +190,7 @@
                 {"title": "开始时间", 'data': 'ts_start'},
                 {"title": "结束时间", 'data': 'ts_end'},
                 {"title": "类型", 'data': 'pk_type'},
+                {"title": "作者", 'data': 'person_name'},
                 {"title": "发布", 'data': 'is_publish', "visible": false}
             ],
             onSelectChange: function (selectedNum, selectedRows) {
@@ -201,6 +215,8 @@
             cms.model.getCurrentData().ts_start = $("#ts_start").val();
             cms.model.getCurrentData().ts_end = $("#ts_end").val();
             cms.model.getCurrentData().pk_type = cms.model.getCurrentData().select_node.pk_type;
+            cms.model.getCurrentData().pk_person = $("#pk_person").val();
+            cms.model.getCurrentData().person_name = $("#person_name").val();
 
             window.houoy.public.post(url + '/save', JSON.stringify(cms.model.getCurrentData()), function (data) {
                 if (data.success) {
@@ -250,7 +266,7 @@
         var typeTree = null;
 
         function loadTree() {
-            window.houoy.public.post(urlTree + '/essaytype/retrieve', null, function (data) {
+            window.houoy.public.get(urlTree + '/essaytype/retrieve', null, function (data) {
                 if (data.success) {
                     cms.model.getCurrentData().tree_data = data.resultData;
                     typeTree = $('#tree').treeview({
