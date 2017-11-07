@@ -300,7 +300,7 @@
         }
 
         function loadTree() {
-            window.houoy.public.post(url + '/folderVideo/retrieve', null, function (data) {
+            window.houoy.public.get(url + '/folderVideo/retrieve', null, function (data) {
                 if (data.success) {
                     var treeData = data.resultData.nodes;
                     folderTree = $('#tree').treeview({
