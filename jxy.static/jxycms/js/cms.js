@@ -18,6 +18,7 @@
         is_publish: 0,
         pk_person:$("#pk_person").val(),
         person_name: $("#person_name").val(),
+        path_thumbnail: $("#path_thumbnail").val(),
         tree_data:[],
         select_node:{}
     });
@@ -32,6 +33,7 @@
         cms.model.getCurrentData().pk_type = data.pk_type;
         cms.model.getCurrentData().is_publish = data.is_publish;
         cms.model.getCurrentData().person_name = data.person_name;
+        cms.model.getCurrentData().path_thumbnail = data.path_thumbnail;
         cms.model.getCurrentData().pk_person = data.pk_person;
         cms.model.getCurrentData().select_node = cms.initTree.getSelectedByField("pk_type",data.pk_type);
 
@@ -42,6 +44,7 @@
         $("#pk_type").val(cms.model.getCurrentData().select_node.text);
         $("#pk_person").val(cms.model.getCurrentData().pk_person);
         $("#person_name").val(cms.model.getCurrentData().person_name);
+        $("#path_thumbnail").val(cms.model.getCurrentData().path_thumbnail);
 
         cms.contentSet('<p>用 JS 设置的内容</p>');
         cms.contentSet(cms.model.getCurrentData().essay_content);
@@ -82,6 +85,7 @@
                 is_publish:0,
                 pk_person:"",
                 person_name:"",
+                path_thumbnail:"",
                 tree_data:[],
                 select_node:{}
             });
@@ -217,6 +221,7 @@
             cms.model.getCurrentData().pk_type = cms.model.getCurrentData().select_node.pk_type;
             cms.model.getCurrentData().pk_person = $("#pk_person").val();
             cms.model.getCurrentData().person_name = $("#person_name").val();
+            cms.model.getCurrentData().path_thumbnail = $("#path_thumbnail").val();
 
             window.houoy.public.post(url + '/save', JSON.stringify(cms.model.getCurrentData()), function (data) {
                 if (data.success) {

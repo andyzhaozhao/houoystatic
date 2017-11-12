@@ -20,6 +20,9 @@
             video_name: $("#video_name").val(),
             video_desc: $("#video_desc").val(),
             video_length: $("#video_length").val(),
+            actor_times: $("#actor_times").val(),
+            actor_calorie: $("#actor_calorie").val(),
+            path_thumbnail: $("#path_thumbnail").val(),
             select_node_id: 0,//默认选中的树节点
             pk_folder: ""
         });
@@ -30,10 +33,16 @@
             video.model.getCurrentData().video_name = data.video_name;
             video.model.getCurrentData().video_desc = data.video_desc;
             video.model.getCurrentData().video_length = data.video_length;
+            video.model.getCurrentData().actor_times = data.actor_times;
+            video.model.getCurrentData().actor_calorie = data.actor_calorie;
+            video.model.getCurrentData().path_thumbnail = data.path_thumbnail;
             $("#video_code").val(video.model.getCurrentData().video_code);
             $("#video_name").val(video.model.getCurrentData().video_name);
             $("#video_desc").val(video.model.getCurrentData().video_desc);
             $("#video_length").val(video.model.getCurrentData().video_length);
+            $("#actor_times").val(video.model.getCurrentData().actor_times);
+            $("#actor_calorie").val(video.model.getCurrentData().actor_calorie);
+            $("#path_thumbnail").val(video.model.getCurrentData().path_thumbnail);
             $("#pk_video").val(video.model.getCurrentData().pk_video);
             video.upload.reset();
             $("#videoFile").val();
@@ -107,7 +116,10 @@
                 video_code: null,
                 video_name: null,
                 video_desc: null,
-                video_length: null
+                video_length: null,
+                actor_times: null,
+                actor_calorie: null,
+                path_thumbnail: null
             });
         };
 
@@ -136,31 +148,44 @@
             $("#videoshowpath").text(srcstr);
         };
 
+        video.controller.save = function(){
+            video.model.getCurrentData().video_name = $("#video_name").val();
+            video.model.getCurrentData().video_code = $("#video_code").val();
+            video.model.getCurrentData().video_desc = $("#video_desc").val();
+            video.model.getCurrentData().video_length = $("#video_length").val();
+            video.model.getCurrentData().actor_times = $("#actor_times").val();
+            video.model.getCurrentData().actor_calorie = $("#actor_calorie").val();
+            video.model.getCurrentData().path_thumbnail = $("#path_thumbnail").val();
+
+            window.houoy.public.post(url + '/video/save', JSON.stringify(video.model.getCurrentData()), function (data) {
+                if (data.success) {
+                    alert("保存成功");
+                    video.model.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
+                } else {
+                    alert("保存失败:" + data.msg);
+                }
+            }, function (err) {
+                alert("请求保存失败！" + err);
+            });
+        };
+
         video.controller.saveRow = function () {
-            if (!($("#video_name").val()) || !($("#video_code").val()) || !($("#video_desc").val()|| !($("#video_length").val()))) {
+            if (!($("#video_name").val()) || !($("#video_code").val()) || !($("#video_desc").val()|| !($("#video_length").val()))
+                || !($("#actor_times").val())|| !($("#actor_calorie").val())|| !($("#path_thumbnail").val())) {
                 alert("请填写完整信息");
             } else {
-                video.upload.upload("videoFile", video.model.getCurrentData().path, function (progress) {
-                    $("#progress").show();
-                    $("#progress span").text(progress + "%");
-                    if (progress >= 100) {//传递完成
-                        video.model.getCurrentData().video_name = $("#video_name").val();
-                        video.model.getCurrentData().video_code = $("#video_code").val();
-                        video.model.getCurrentData().video_desc = $("#video_desc").val();
-                        video.model.getCurrentData().video_length = $("#video_length").val();
+                if(!($("#videoFile").val())) {//如果没有传文件则直接保存
+                    video.controller.save();
+                }else{
+                    video.upload.upload("videoFile", video.model.getCurrentData().path, function (progress) {
+                        $("#progress").show();
+                        $("#progress span").text(progress + "%");
+                        if (progress >= 100) {//传递完成
+                            video.controller.save();
+                        }
+                    });
+                }
 
-                        window.houoy.public.post(url + '/video/save', JSON.stringify(video.model.getCurrentData()), function (data) {
-                            if (data.success) {
-                                alert("保存成功");
-                                video.model.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
-                            } else {
-                                alert("保存失败:" + data.msg);
-                            }
-                        }, function (err) {
-                            alert("请求保存失败！" + err);
-                        });
-                    }
-                });
                 //video.model.getCurrentData().video_name = $("#video_name").val();
                 //video.model.getCurrentData().video_code = $("#video_code").val();
                 //video.model.getCurrentData().video_desc = $("#video_desc").val();
@@ -256,7 +281,10 @@
                 video_code: null,
                 video_name: null,
                 video_desc: null,
-                video_length: null
+                video_length: null,
+                actor_times: null,
+                actor_calorie: null,
+                path_thumbnail: null
             });
         };
 
