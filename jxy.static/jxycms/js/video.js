@@ -20,6 +20,7 @@
             video_name: $("#video_name").val(),
             video_desc: $("#video_desc").val(),
             video_length: $("#video_length").val(),
+            video_size:"",
             actor_times: $("#actor_times").val(),
             actor_calorie: $("#actor_calorie").val(),
             path_thumbnail: $("#path_thumbnail").val(),
@@ -88,6 +89,8 @@
                     {"title": "视频编码", 'data': 'video_code'},
                     {"title": "视频名称", 'data': 'video_name'},
                     {"title": "视频时长（秒）", 'data': 'video_length'},
+                    {"title": "视频大小", 'data': 'video_size'},
+                    {"title": "视频路径", 'data': 'path'},
                     {"title": "视频详细描述", 'data': 'video_desc'}],
                 onSelectChange: function (selectedNum, selectedRows) {
                     if (selectedNum > 1) {
@@ -177,7 +180,9 @@
                 if(!($("#videoFile").val())) {//如果没有传文件则直接保存
                     video.controller.save();
                 }else{
+                    debugger;
                     video.upload.upload("videoFile", video.model.getCurrentData().path, function (progress) {
+                        debugger;
                         $("#progress").show();
                         $("#progress span").text(progress + "%");
                         if (progress >= 100) {//传递完成
@@ -185,44 +190,6 @@
                         }
                     });
                 }
-
-                //video.model.getCurrentData().video_name = $("#video_name").val();
-                //video.model.getCurrentData().video_code = $("#video_code").val();
-                //video.model.getCurrentData().video_desc = $("#video_desc").val();
-
-                /*var formData = new FormData();
-                 formData.append("file", $("#videoFile")[0].files[0]);
-                 if (video.model.getCurrentData().pk_video) {
-                 formData.append("pk_video", video.model.getCurrentData().pk_video);
-                 }
-                 formData.append("video_name", video.model.getCurrentData().video_name);
-                 formData.append("video_code", video.model.getCurrentData().video_code);
-                 formData.append("video_desc", video.model.getCurrentData().video_desc);
-                 formData.append("pk_folder", video.model.getCurrentData().pk_folder);
-                 formData.append("path", video.model.getCurrentData().path);
-
-                 $.ajax({
-                 url: url + '/video/save',
-                 type: 'POST',
-                 data: formData,
-                 cache: false, //上传文件不需要缓存。
-                 processData: false, // 告诉jQuery不要去处理发送的数据
-                 contentType: false,// 告诉jQuery不要去设置Content-Type请求头
-                 beforeSend: function (xhr) {
-                 xhr.setRequestHeader("x-auth-token", window.houoy.public.static.getSessionID());  //使用spring session的token方式
-                 },
-                 success: function (data) {
-                 if (data.success) {
-                 alert("保存成功");
-                 video.model.setUIState(window.houoy.public.PageManage.UIState.SEARCH);
-                 } else {
-                 alert("保存失败:" + data.msg);
-                 }
-                 },
-                 error: function (data) {
-                 alert("保存失败:" + data.msg);
-                 }
-                 });*/
             }
         };
 
@@ -252,25 +219,6 @@
                 }, function (err) {
                     alert("请求删除失败！");
                 });
-
-                //$.ajax({
-                //    type: 'delete',
-                //    url: url + '/video/delete',
-                //    contentType: "application/json;charset=UTF-8",
-                //    dataType: "json",
-                //    data: JSON.stringify(_ids),
-                //    success: function (data) {
-                //        if (data.success) {
-                //            video.model.setModal(window.houoy.public.PageManage.UIModal.LIST);
-                //            video.refresh();
-                //        } else {
-                //            alert("删除失败:" + data);
-                //        }
-                //    },
-                //    error: function (data) {
-                //        alert("删除失败！");
-                //    }
-                //});
             }
         };
 
@@ -473,19 +421,6 @@
                 alert("删除失败" + err.responseText);
                 $('#treeDeleteModal').modal("hide");
             });
-
-            //window.houoy.public.post(url + '/folderVideo/delete', JSON.stringify(paramData), function (data) {
-            //    if (data.success) {
-            //        video.model.getCurrentData().select_node_id = 0 ;
-            //        loadTree();
-            //    } else {
-            //        alert("删除失败:" + data.msg);
-            //    }
-            //    $('#treeDeleteModal').modal("hide");
-            //}, function (err) {
-            //    alert("删除失败" + err.responseText);
-            //    $('#treeDeleteModal').modal("hide");
-            //});
         });
 
         //搜索
@@ -516,6 +451,8 @@
             var arr = str.split('\\');//注split可以用字符或字符串分割
             var my = arr[arr.length - 1];//这就是要取得的视频名称
             $('#video_name').val(my);
+            debugger;
+            video.model.getCurrentData().video_size = $(this)[0].files[0].size;
         })
     };
 
