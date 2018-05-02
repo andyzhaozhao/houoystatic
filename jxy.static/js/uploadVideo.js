@@ -29,7 +29,7 @@
                     formData.set('file', block);
 
                     $.ajax({
-                        url: window.houoy.public.static.cmsContextPath + "/api" + '/apk/upload',
+                        url: window.houoy.public.static.cmsContextPath + "/api" + '/video/upload',
                         type: 'POST',
                         data: formData,
                         cache: false, //上传文件不需要缓存。
